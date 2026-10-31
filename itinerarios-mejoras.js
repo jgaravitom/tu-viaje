@@ -61,7 +61,10 @@
     const groups=[{t:'lugares',title:traducciones[this.lang].res_places_title,c:[26,122,184]},{t:'comida',title:traducciones[this.lang].res_food_title,c:[245,130,32]},{t:'hospedaje',title:traducciones[this.lang].res_hotel_title,c:[16,160,110]}].map(g=>({...g,items:elegidos(d,g.t,p)}));
     const clean=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’‘]/g,"'");
     const doc=new jsPDF({unit:'mm',format:'a4'}),W=210,M=16,A=W-2*M;let y=20;
-    doc.setFillColor(20,67,122);doc.rect(0,0,W,34,'F');doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(18);doc.text(clean(d.nombre),M,17);doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text('Tu Guía · '+(PLANES[p]?.label||'Todas las experiencias'),M,26);y=46;
+    doc.setFillColor(20,67,122);doc.rect(0,0,W,34,'F');
+    const logo=await this.cargarImagen('img/Logo.png');let xTexto=M;
+    if(logo){const h=19,w=h*logo.w/logo.h;doc.setFillColor(255,255,255);doc.roundedRect(M,6,w+5,h+4,2,2,'F');doc.addImage(logo.url,'PNG',M+2.5,8,w,h);xTexto=M+w+11;}
+    doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(18);doc.text(clean(d.nombre),xTexto,17);doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text('Tu Guía · '+(PLANES[p]?.label||'Todas las experiencias'),xTexto,26);y=46;
     for(const g of groups){if(!g.items.length)continue;if(y>265){doc.addPage();y=20;}doc.setFillColor(...g.c);doc.rect(M,y-5,2.5,7,'F');doc.setTextColor(20,67,122);doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text(clean(g.title),M+6,y);y+=10;
       for(const it of g.items){let image=null;if(it.image){try{image=await this.cargarImagen(it.image);}catch(_){image=null;}}
         const lines=doc.splitTextToSize(clean(it.texto),A-(image?45:12)),h=Math.max(image?29:8,lines.length*5+4);if(y+h>280){doc.addPage();y=20;}
