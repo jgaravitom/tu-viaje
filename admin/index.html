@@ -42,7 +42,7 @@
 const WORKER_URL='https://tu-viaje.jgaravitom.workers.dev/';
 const $=id=>document.getElementById(id);
 let password='', metadata={};
-const norm=s=>String(s||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,120);
+const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,120);
 const all=[];
 function walk(o){if(Array.isArray(o)){o.forEach(x=>{if(x&&x.id)all.push(x);});return;}if(o&&typeof o==='object')Object.values(o).forEach(walk);}
 walk(window.TU_GUIA_DESTINOS);
