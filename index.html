@@ -21,6 +21,34 @@
             background-size: cover;
             background-position: center;
         }
+
+        /* Carrusel de destinos (se desplaza hacia la izquierda) */
+        .marquee {
+            overflow: hidden;
+            -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+            mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+        }
+        .marquee-track {
+            display: flex;
+            width: max-content;
+            animation: marquee-izquierda var(--dur, 140s) linear infinite;
+            will-change: transform;
+        }
+        .marquee:hover .marquee-track { animation-play-state: paused; }
+        .marquee-card { margin: 0 1rem 0 0; flex-shrink: 0; width: 15rem; height: 10rem; }
+        @media (min-width: 768px) { .marquee-card { width: 18rem; height: 11rem; } }
+        @keyframes marquee-izquierda {
+            from { transform: translateX(0); }  
+            to   { transform: translateX(-50%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .marquee-track { animation: none; }
+            .marquee { overflow-x: auto; }
+        }
+
+        /* Ventana flotante de la política */
+        #modal-politica .pol-body h4 { color: #fff; font-weight: 700; font-size: 1rem; margin: 1.5rem 0 .5rem; }
+        #modal-politica .pol-body p { margin-bottom: .6rem; line-height: 1.65; }
     </style>
 </head>
 <body class="bg-slate-900 min-h-screen text-slate-100 flex flex-col justify-between bg-custom">
@@ -28,15 +56,15 @@
     <!-- Header de navegación superior -->
     <header class="w-full p-4 md:p-6 flex justify-between items-center max-w-7xl mx-auto">
         <div class="flex items-center space-x-3 cursor-pointer" onclick="app.irMenuPrincipal()">
-            <img src="img/Logo.png" alt="Logo Tu Guía" class="h-16 md:h-24 w-auto bg-white rounded-2xl px-4 py-2.5 md:px-6 md:py-3 shadow-2xl ring-1 ring-white/20 hover:scale-105 transition duration-300">
+            <img src="img/Logo.png" alt="Logo Tu Guía" class="h-16 sm:h-24 md:h-32 w-auto bg-white rounded-2xl px-4 py-2.5 md:px-6 md:py-3 shadow-2xl ring-1 ring-white/20 hover:scale-105 transition duration-300">
         </div>
         <div id="nav-controls" class="flex items-center space-x-3">
             <!-- Botón de retroceso dinámico -->
-            <button id="btn-back" onclick="app.retroceder()" class="hidden bg-slate-800/80 hover:bg-slate-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition border border-slate-700 shadow-md backdrop-blur-sm flex items-center space-x-2">
+            <button id="btn-back" onclick="app.retroceder()" style="display:none" class="bg-slate-800/80 hover:bg-slate-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition border border-slate-700 shadow-md backdrop-blur-sm flex items-center space-x-2">
                 <i class="fa-solid fa-arrow-left"></i> <span id="txt-back">Atrás</span>
             </button>
             <!-- Botón menú principal -->
-            <button id="btn-home" onclick="app.irMenuPrincipal()" class="hidden bg-slate-800/80 hover:bg-slate-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition border border-slate-700 shadow-md backdrop-blur-sm flex items-center space-x-2">
+            <button id="btn-home" onclick="app.irMenuPrincipal()" style="display:none" class="bg-slate-800/80 hover:bg-slate-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition border border-slate-700 shadow-md backdrop-blur-sm flex items-center space-x-2">
                 <i class="fa-solid fa-house"></i> <span id="txt-home">Menú</span>
             </button>
         </div>
@@ -52,6 +80,11 @@
                 <p class="text-slate-300 text-sm md:text-base" data-i18n="s1_subtitle">Selecciona tu idioma preferido y acepta los términos para comenzar tu experiencia de viaje.</p>
             </div>
 
+            <!-- Carrusel de destinos -->
+            <div class="marquee -mx-6 md:-mx-10 mb-8" aria-label="Destinos">
+                <div id="carrusel-track" class="marquee-track"></div>
+            </div>
+
             <!-- Selector de Idioma -->
             <div class="mb-8">
                 <label class="block text-sm font-semibold text-slate-300 mb-3 text-center" data-i18n="s1_lang_label">Selecciona el Idioma / Select Language / Choisissez la langue</label>
@@ -63,15 +96,15 @@
             </div>
 
             <!-- Consentimiento Informado (Ley 1581 de Colombia) -->
-            <div class="bg-slate-950/60 border border-slate-800 rounded-2xl p-4 md:p-6 mb-8 max-h-48 overflow-y-auto text-xs md:text-sm text-slate-400">
-                <h3 class="font-bold text-slate-200 mb-2" data-i18n="s1_habeas_title">Política de Tratamiento de Datos (Ley 1581 de 2012 - Colombia)</h3>
-                <p data-i18n="s1_habeas_text">De conformidad con la Ley Estatutaria 1581 de 2012 de Protección de Datos y el Decreto 1377 de 2013, al continuar con la plataforma, autoriza a "Tu Guía" para la recolección, almacenamiento y uso de los datos de navegación generados en esta sesión con fines estadísticos, de recomendación turística y mejora de experiencia interactiva. Sus datos no serán compartidos con terceros con fines comerciales.</p>
-            </div>
-
-            <!-- Checkbox de Aceptación -->
-            <div class="flex items-center justify-center space-x-3 mb-8">
-                <input type="checkbox" id="check-consent" onchange="app.validarConsentimiento()" class="w-5 h-5 accent-blue-600 rounded cursor-pointer">
-                <label for="check-consent" class="text-sm text-slate-300 cursor-pointer select-none" data-i18n="s1_accept">He leído y acepto los términos y el tratamiento de datos personales.</label>
+            <div class="flex flex-col items-center justify-center mb-8">
+                <div class="flex items-start sm:items-center justify-center space-x-3 max-w-xl">
+                    <input type="checkbox" id="check-consent" onclick="app.clickConsentimiento(event)" onchange="app.validarConsentimiento()" class="w-5 h-5 mt-0.5 sm:mt-0 accent-blue-600 rounded cursor-pointer flex-shrink-0">
+                    <p class="text-sm text-slate-300 select-none">
+                        <span data-i18n="s1_accept_pre">He leído y acepto la</span>
+                        <button type="button" onclick="app.abrirPolitica()" class="text-blue-400 hover:text-blue-300 underline underline-offset-2 font-medium text-left" data-i18n="s1_habeas_link">Política de Tratamiento de Datos (Ley 1581 de 2012 - Colombia)</button>
+                    </p>
+                </div>
+                <p id="policy-hint" class="text-xs text-slate-500 mt-3 text-center" data-i18n="s1_policy_hint">Para continuar debes abrir la política y leerla hasta el final.</p>
             </div>
 
             <!-- Botón Continuar -->
@@ -241,7 +274,36 @@
         <p>Tu Guía &copy; 2026 - Todos los derechos reservados. Desarrollado con estándares profesionales.</p>
     </footer>
 
+    <!-- Ventana flotante: Política de Tratamiento de Datos -->
+    <div id="modal-politica" style="display:none" class="fixed inset-0 z-50 items-center justify-center p-3 sm:p-6 bg-slate-950/80 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="pol-titulo">
+        <div class="w-full max-w-2xl max-h-full h-[88vh] bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl flex flex-col overflow-hidden">
+            <!-- Cabecera -->
+            <div class="flex items-start justify-between gap-4 px-5 sm:px-7 pt-5 pb-3 border-b border-slate-800">
+                <div>
+                    <h3 id="pol-titulo" class="text-lg sm:text-xl font-bold text-white"></h3>
+                    <p id="pol-subtitulo" class="text-xs text-slate-400 mt-1"></p>
+                </div>
+                <button type="button" onclick="app.cerrarPolitica()" class="text-slate-400 hover:text-white w-9 h-9 rounded-xl hover:bg-slate-800 transition flex-shrink-0" aria-label="Cerrar">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <!-- Barra de progreso de lectura -->
+            <div class="h-1 bg-slate-800"><div id="pol-progreso" class="h-full bg-blue-500 transition-all duration-150" style="width:0%"></div></div>
+            <!-- Contenido con scroll -->
+            <div id="pol-body" class="pol-body flex-1 overflow-y-auto px-5 sm:px-7 py-5 text-sm text-slate-300" onscroll="app.onScrollPolitica()" tabindex="0"></div>
+            <!-- Pie -->
+            <div class="px-5 sm:px-7 py-4 border-t border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <p id="pol-estado" class="text-xs text-slate-400"></p>
+                <div class="flex gap-3 sm:flex-shrink-0">
+                    <button type="button" onclick="app.cerrarPolitica()" id="pol-btn-cerrar" class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold px-5 py-2.5 rounded-xl border border-slate-700 transition text-sm"></button>
+                    <button type="button" id="pol-btn-aceptar" disabled onclick="app.aceptarPolitica()" class="flex-1 sm:flex-none bg-blue-600/40 cursor-not-allowed text-white/70 font-semibold px-5 py-2.5 rounded-xl transition text-sm"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Script principal de lógica -->
+    <script src="politica.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

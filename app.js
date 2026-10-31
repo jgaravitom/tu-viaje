@@ -310,9 +310,15 @@ const traducciones = {
     }
 };
 
+// Textos de interfaz de la política (definidos en politica.js)
+if (typeof POLITICA !== 'undefined') {
+    Object.keys(POLITICA).forEach(l => Object.assign(traducciones[l], POLITICA[l].ui));
+}
+
 class TuGuiaApp {
     constructor() {
-        this.currentScreen = 1;
+        this.politicaLeida = false;
+        this.currentScreen = 'screen-1';
         this.historyStack = [];
         this.lang = 'es';
         this.estado = {
@@ -328,6 +334,10 @@ class TuGuiaApp {
     init() {
         this.actualizarTextosUI();
         this.actualizarNavegacionNav();
+        this.iniciarCarrusel();
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') this.cerrarPolitica();
+        });
     }
 
     cambiarIdioma(lang) {
@@ -347,6 +357,143 @@ class TuGuiaApp {
         });
         document.getElementById('txt-back').textContent = t['txt_back'];
         document.getElementById('txt-home').textContent = t['txt_home'];
+        this.actualizarTextosPolitica();
+    }
+
+    // ---------- Política de tratamiento de datos (ventana flotante) ----------
+    actualizarTextosPolitica() {
+        if (typeof POLITICA === 'undefined') return;
+        const t = traducciones[this.lang];
+        const pol = POLITICA[this.lang];
+        document.getElementById('pol-titulo').textContent = pol.titulo;
+        document.getElementById('pol-subtitulo').textContent = pol.subtitulo;
+        document.getElementById('pol-btn-cerrar').textContent = t.pol_close;
+        document.getElementById('pol-btn-aceptar').textContent = t.pol_accept;
+
+        const parrafo = txt => txt.startsWith('•')
+            ? `<p style="margin-left:1rem;text-indent:-.9rem">${txt}</p>`
+            : `<p>${txt}</p>`;
+        let html = `<p class="text-slate-200">${pol.intro}</p>`;
+        pol.secciones.forEach(sec => {
+            html += `<h4>${sec.t}</h4>` + sec.p.map(parrafo).join('');
+        });
+        html += `<p class="mt-6 pt-4 border-t border-slate-800 text-slate-200 font-medium">${pol.cierre}</p>`;
+        document.getElementById('pol-body').innerHTML = html;
+        this.actualizarProgresoPolitica();
+    }
+
+    abrirPolitica() {
+        this.actualizarTextosPolitica();
+        const modal = document.getElementById('modal-politica');
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        const body = document.getElementById('pol-body');
+        body.scrollTop = 0;
+        this.actualizarProgresoPolitica();
+        body.focus({ preventScroll: true });
+    }
+
+    cerrarPolitica() {
+        const modal = document.getElementById('modal-politica');
+        if (!modal || modal.style.display === 'none') return;
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    onScrollPolitica() {
+        this.actualizarProgresoPolitica();
+    }
+
+    actualizarProgresoPolitica() {
+        // Con la ventana cerrada no hay medidas de scroll válidas: no se evalúa
+        if (document.getElementById('modal-politica').style.display === 'none') return;
+        const body = document.getElementById('pol-body');
+        const t = traducciones[this.lang];
+        const max = body.scrollHeight - body.clientHeight;
+        const pct = max <= 0 ? 100 : Math.min(100, (body.scrollTop / max) * 100);
+        document.getElementById('pol-progreso').style.width = pct + '%';
+        // Se habilita "Aceptar" solo al llegar al final (una vez alcanzado, se mantiene)
+        if (max <= 0 || body.scrollTop >= max - 6) this.politicaLeida = true;
+
+        const btn = document.getElementById('pol-btn-aceptar');
+        const estado = document.getElementById('pol-estado');
+        if (this.politicaLeida) {
+            btn.disabled = false;
+            btn.className = "flex-1 sm:flex-none bg-blue-600 hover:bg-blue-500 text-white font-semibold px-5 py-2.5 rounded-xl shadow-lg transition text-sm cursor-pointer";
+            estado.textContent = t.pol_read_ok;
+            estado.className = "text-xs text-emerald-400";
+        } else {
+            btn.disabled = true;
+            btn.className = "flex-1 sm:flex-none bg-blue-600/40 cursor-not-allowed text-white/70 font-semibold px-5 py-2.5 rounded-xl transition text-sm";
+            estado.textContent = t.pol_scroll_hint;
+            estado.className = "text-xs text-slate-400";
+        }
+    }
+
+    aceptarPolitica() {
+        if (!this.politicaLeida) return;
+        const check = document.getElementById('check-consent');
+        check.checked = true;
+        document.getElementById('policy-hint').style.display = 'none';
+        this.validarConsentimiento();
+        this.cerrarPolitica();
+    }
+
+    // Si aún no ha leído la política, la casilla abre la ventana en lugar de marcarse
+    clickConsentimiento(e) {
+        if (!this.politicaLeida) {
+            e.preventDefault();
+            this.abrirPolitica();
+        }
+    }
+
+    // ---------- Carrusel de destinos ----------
+    iniciarCarrusel() {
+        const track = document.getElementById('carrusel-track');
+        if (!track) return;
+
+        const recolectar = (obj, out) => {
+            if (Array.isArray(obj)) obj.forEach(d => { if (d && d.id) out.push(d); });
+            else if (obj && typeof obj === 'object') Object.values(obj).forEach(v => recolectar(v, out));
+            return out;
+        };
+        const vistos = new Set();
+        const destinos = recolectar(baseDatosDestinos, []).filter(d => !vistos.has(d.id) && vistos.add(d.id));
+
+        // Orden aleatorio (Fisher-Yates)
+        for (let i = destinos.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [destinos[i], destinos[j]] = [destinos[j], destinos[i]];
+        }
+
+        const tarjeta = (d, copia) => {
+            const k = d.nombre.lastIndexOf(',');
+            const ciudad = k > -1 ? d.nombre.slice(0, k).trim() : d.nombre;
+            const pais = k > -1 ? d.nombre.slice(k + 1).trim() : '';
+            const base = d.img.replace(/\.[^.]+$/, '');
+            return `
+                <figure class="marquee-card relative overflow-hidden rounded-2xl border border-white/10 shadow-lg bg-slate-800"${copia ? ' aria-hidden="true"' : ''}>
+                    <img src="img/thumbs/${base}.jpg" alt="${copia ? '' : d.nombre}" decoding="async" draggable="false"
+                         data-full="img/${d.img}"
+                         onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src=this.dataset.full;}else{this.onerror=null;this.src='img/fondo.png';}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/10 to-transparent"></div>
+                    <figcaption class="absolute bottom-3 left-3 right-3 text-left leading-tight">
+                        <span class="block text-sm md:text-base font-bold text-white drop-shadow">${ciudad}</span>
+                        ${pais ? `<span class="block text-xs text-slate-200/90 mt-0.5"><i class="fa-solid fa-location-dot text-blue-400 mr-1"></i>${pais}</span>` : ''}
+                    </figcaption>
+                </figure>`;
+        };
+
+        // Dos copias seguidas para que el bucle sea continuo
+        track.innerHTML = destinos.map(d => tarjeta(d, false)).join('') + destinos.map(d => tarjeta(d, true)).join('');
+
+        // Velocidad constante (~45 px/s) según el ancho real, medido cuando ya cargaron los estilos
+        const ajustarVelocidad = () => {
+            const mitad = track.scrollWidth / 2;
+            if (mitad > 0) track.style.setProperty('--dur', (mitad / 45) + 's');
+        };
+        ajustarVelocidad();
+        window.addEventListener('load', ajustarVelocidad);
     }
 
     validarConsentimiento() {
@@ -383,13 +530,10 @@ class TuGuiaApp {
     actualizarNavegacionNav() {
         const btnBack = document.getElementById('btn-back');
         const btnHome = document.getElementById('btn-home');
-        if (this.currentScreen === 'screen-1') {
-            btnBack.classList.add('hidden');
-            btnHome.classList.add('hidden');
-        } else {
-            btnBack.classList.remove('hidden');
-            btnHome.classList.remove('hidden');
-        }
+        // En la pantalla de inicio no se muestran "Atrás" ni "Menú"
+        const mostrar = this.currentScreen !== 'screen-1';
+        btnBack.style.display = mostrar ? '' : 'none';
+        btnHome.style.display = mostrar ? '' : 'none';
     }
 
     retroceder() {
@@ -405,6 +549,9 @@ class TuGuiaApp {
         this.historyStack = [];
         this.estado = { clima: null, ambienteCalido: null, continente: null, destinoSeleccionado: null, tipoPlan: null };
         document.getElementById('check-consent').checked = false;
+        this.politicaLeida = false;
+        document.getElementById('policy-hint').style.display = '';
+        this.cerrarPolitica();
         this.validarConsentimiento();
         this.navegarA('screen-1', false);
     }
