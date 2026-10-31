@@ -54,28 +54,7 @@
     const heading=document.querySelector('#screen-6 .text-center h2');
     if(heading){const n=document.createElement('p');n.id='plan-description';n.className='mt-2 text-sm text-blue-300';n.textContent='Plan: '+(PLANES[p]?.label||'Todas las experiencias')+'. Marca las opciones que deseas incluir en tu PDF.';heading.insertAdjacentElement('afterend',n);}
   };
-  const originalPDF=app.descargarPDF.bind(app);
-  app.descargarPDF=async function(){
-    const d=this.estado.destinoSeleccionado,p=this.estado.tipoPlan||'todas',jsPDF=window.jspdf&&window.jspdf.jsPDF;
-    if(!jsPDF)return originalPDF();
-    await cargarMetadata();
-    const groups=[{t:'lugares',title:traducciones[this.lang].res_places_title,c:[26,122,184]},{t:'comida',title:traducciones[this.lang].res_food_title,c:[245,130,32]},{t:'hospedaje',title:traducciones[this.lang].res_hotel_title,c:[16,160,110]}].map(g=>({...g,items:elegidos(d,g.t,p)}));
-    const clean=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[’‘]/g,"'");
-    const doc=new jsPDF({unit:'mm',format:'a4'}),W=210,M=16,A=W-2*M;let y=20;
-    doc.setFillColor(20,67,122);doc.rect(0,0,W,34,'F');
-    const logo=await this.cargarImagen('img/Logo.png');
-    let xTexto=M;
-    if(logo){const h=19,w=h*logo.w/logo.h;doc.setFillColor(255,255,255);doc.roundedRect(M,6,w+5,h+4,2,2,'F');doc.addImage(logo.url,'PNG',M+2.5,8,w,h);xTexto=M+w+11;}
-    doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(18);doc.text(clean(d.nombre),xTexto,17);doc.setFont('helvetica','normal');doc.setFontSize(10);doc.text('Tu Guía · '+(PLANES[p]?.label||'Todas las experiencias'),xTexto,26);y=46;
-    for(const g of groups){if(!g.items.length)continue;if(y>265){doc.addPage();y=20;}doc.setFillColor(...g.c);doc.rect(M,y-5,2.5,7,'F');doc.setTextColor(20,67,122);doc.setFont('helvetica','bold');doc.setFontSize(13);doc.text(clean(g.title),M+6,y);y+=10;
-      for(const it of g.items){let image=null;if(it.image){try{image=await this.cargarImagen(it.image);}catch(_){image=null;}}
-        const lines=doc.splitTextToSize(clean(it.texto),A-(image?45:12)),h=Math.max(image?29:8,lines.length*5+4);if(y+h>280){doc.addPage();y=20;}
-        if(image){const ratio=image.w/image.h;let iw=34,ih=iw/ratio;if(ih>25){ih=25;iw=ih*ratio;}doc.addImage(image.url,'PNG',M+7,y-3,iw,ih);}
-        doc.setFont('helvetica','normal');doc.setFontSize(10.5);doc.setTextColor(45,55,70);doc.text(lines,M+(image?48:10),y+3);y+=h+4;
-      }y+=5;
-    }
-    const pages=doc.getNumberOfPages();for(let i=1;i<=pages;i++){doc.setPage(i);doc.setFontSize(8);doc.setTextColor(120,130,145);doc.text('Tu Guía · '+new Date().toLocaleDateString(this.lang)+' · '+i+'/'+pages,W/2,291,{align:'center'});}
-    doc.save('Itinerario_'+d.id+'.pdf');
-  };
+  // Se conserva el generador PDF original de app.js, que ya gestiona el documento completo.
+  // La selección visual de planes no debe reemplazar la descarga estable.
   cargarMetadata();
 })();
