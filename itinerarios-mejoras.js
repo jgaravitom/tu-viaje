@@ -68,10 +68,10 @@
       const plan = this.estado.tipoPlan || 'todas';
       const t = (typeof traducciones !== 'undefined' && traducciones[this.lang]) || {};
       const limpiar = s => String(s == null ? '' : s)
-        .replace(/[\\u2018\\u2019]/g, "'").replace(/[\\u201C\\u201D]/g, '"')
-        .replace(/[\\u2013\\u2014]/g, '-').replace(/ı/g, 'i').replace(/İ/g, 'I')
-        .normalize('NFD').replace(/[\\u0300-\\u036f]/g, '')
-        .replace(/[^\\x20-\\xFF]/g, '');
+        .replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"')
+        .replace(/[\u2013\u2014]/g, '-').replace(/ı/g, 'i').replace(/İ/g, 'I')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^\x20-\xFF]/g, '');
 
       const grupos = [
         {tipo:'lugares', titulo:t.res_places_title || 'Lugares turísticos recomendados', color:[37,99,180]},
