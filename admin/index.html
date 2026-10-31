@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Administración | Tu Viaje</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100">
+  <main class="mx-auto max-w-3xl p-6 md:p-10">
+    <header class="mb-8">
+      <p class="text-sm font-semibold uppercase tracking-widest text-emerald-400">Tu Viaje</p>
+      <h1 class="mt-2 text-3xl font-bold">Panel de administración</h1>
+      <p class="mt-2 text-slate-400">Carga imágenes para destinos, comidas, hoteles y recomendaciones.</p>
+    </header>
+
+    <section id="login" class="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+      <h2 class="text-xl font-semibold">Acceso administrador</h2>
+      <label for="password" class="mt-5 block text-sm text-slate-300">Contraseña</label>
+      <input id="password" type="password" autocomplete="current-password" class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 p-3 outline-none focus:border-emerald-500" placeholder="Contraseña de administrador">
+      <button id="enter" class="mt-4 rounded-lg bg-emerald-600 px-5 py-3 font-semibold hover:bg-emerald-500">Continuar</button>
+      <p id="loginMessage" class="mt-3 text-sm text-amber-300" role="status">La contraseña se comprobará en el servidor al cargar la primera imagen.</p>
+    </section>
+
+    <section id="uploader" class="mt-6 hidden rounded-2xl border border-slate-800 bg-slate-900 p-6">
+      <div class="grid gap-5 sm:grid-cols-2">
+        <div>
+          <label for="folder" class="block text-sm text-slate-300">Tipo de contenido</label>
+          <select id="folder" class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 p-3">
+            <option value="destinos">Destinos</option>
+            <option value="comidas">Comidas</option>
+            <option value="hoteles">Hoteles</option>
+            <option value="recomendaciones">Recomendaciones</option>
+          </select>
+        </div>
+        <div>
+          <label for="reference" class="block text-sm text-slate-300">Nombre de referencia (opcional)</label>
+          <input id="reference" class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 p-3" placeholder="Ej. Cartagena">
+        </div>
+      </div>
+
+      <label for="imageFile" class="mt-5 block text-sm text-slate-300">Selecciona una imagen (PNG, JPG o WebP; máximo 5 MB)</label>
+      <input id="imageFile" type="file" accept="image/png,image/jpeg,image/webp" class="mt-2 block w-full rounded-lg border border-slate-700 bg-slate-950 p-3 text-sm">
+      <img id="preview" alt="Vista previa de la imagen seleccionada" class="mt-5 hidden max-h-72 max-w-full rounded-xl object-contain">
+      <button id="upload" class="mt-5 rounded-lg bg-emerald-600 px-5 py-3 font-semibold hover:bg-emerald-500">Subir imagen a GitHub</button>
+      <p id="status" class="mt-4 text-sm" role="status" aria-live="polite"></p>
+      <div id="result" class="mt-3 break-all text-sm text-emerald-300"></div>
+    </section>
+    <p class="mt-8 text-xs text-slate-500">Las imágenes se guardan en el repositorio del sitio. La asociación automática con destinos y documentos PDF se configura en un paso posterior.</p>
+  </main>
+
+  <script>
+    const WORKER_URL = 'https://tu-viaje.jgaravitom.workers.dev/';
+    const $ = (id) => document.getElementById(id);
+    let adminPassword = '';
+
+    $('enter').addEventListener('click', () => {
+      adminPassword = $('password').value;
+      if (!adminPassword) {
+        $('loginMessage').textContent = 'Ingresa la contraseña para continuar.';
+        return;
+      }
+      $('login').classList.add('hidden');
+      $('uploader').classList.remove('hidden');
+    });
+
+    $('imageFile').addEventListener('change', () => {
+      const file = $('imageFile').files[0];
+      $('preview').classList.toggle('hidden', !file);
+      if (file) $('preview').src = URL.createObjectURL(file);
+      $('status').textContent = '';
+      $('result').textContent = '';
+    });
+
+    $('upload').addEventListener('click', async () => {
+      const file = $('imageFile').files[0];
+      $('status').textContent = '';
+      $('result').textContent = '';
+      if (!file) {
+        $('status').textContent = 'Selecciona una imagen primero.';
+        return;
+      }
+      if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
+        $('status').textContent = 'Formato no permitido. Usa PNG, JPG o WebP.';
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        $('status').textContent = 'La imagen supera el límite de 5 MB.';
+        return;
+      }
+
+      $('upload').disabled = true;
+      $('upload').textContent = 'Subiendo…';
+      $('status').textContent = 'Preparando imagen…';
+      try {
+        const base64 = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result).split(',')[1]);
+          reader.onerror = () => reject(new Error('No se pudo leer el archivo.'));
+          reader.readAsDataURL(file);
+        });
+        const response = await fetch(WORKER_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Admin-Password': adminPassword
+          },
+          body: JSON.stringify({
+            filename: file.name,
+            contentBase64: base64,
+            contentType: file.type,
+            folder: $('folder').value,
+            reference: $('reference').value.trim()
+          })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || 'No se pudo subir la imagen. Verifica la contraseña y los secretos del Worker.');
+        $('status').textContent = 'Imagen subida correctamente.';
+        const path = document.createElement('p');
+        path.textContent = 'Ruta: ' + (data.path || '');
+        $('result').appendChild(path);
+        if (data.url) {
+          const link = document.createElement('a');
+          link.href = data.url;
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          link.textContent = 'Abrir imagen';
+          link.className = 'underline';
+          $('result').appendChild(link);
+        }
+        $('imageFile').value = '';
+        $('preview').classList.add('hidden');
+      } catch (error) {
+        $('status').textContent = error.message || 'Ocurrió un error durante la carga.';
+      } finally {
+        $('upload').disabled = false;
+        $('upload').textContent = 'Subir imagen a GitHub';
+      }
+    });
+  </script>
+</body>
+</html>
