@@ -46,7 +46,8 @@
     return filtrar(dest[tipo],tipo,plan).filter(x=>checks.includes(x.indice)).map(x=>({texto:x.texto,image:ruta(dest,tipo,x.texto,x.indice,plan)}));
   }
   const original=app.poblarResultadosFinales.bind(app);
-  app.poblarResultadosFinales=function(){
+  app.poblarResultadosFinales=async function(){
+    await cargarMetadata();
     original(); const d=this.estado.destinoSeleccionado, p=this.estado.tipoPlan||'todas';
     render(d,'lugares',p);render(d,'comida',p);render(d,'hospedaje',p);
     const old=document.getElementById('plan-description'); if(old)old.remove();
