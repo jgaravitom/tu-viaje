@@ -7,11 +7,14 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="min-h-screen bg-slate-950 text-slate-100">
-  <main class="mx-auto max-w-3xl p-6 md:p-10">
-    <header class="mb-8">
-      <p class="text-sm font-semibold uppercase tracking-widest text-emerald-400">Tu Viaje</p>
-      <h1 class="mt-2 text-3xl font-bold">Panel de administración</h1>
-      <p class="mt-2 text-slate-400">Carga imágenes para destinos, comidas, hoteles y recomendaciones.</p>
+  <main class="mx-auto max-w-4xl p-5 md:p-10">
+    <header class="mb-8 flex flex-wrap items-start justify-between gap-4">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-widest text-emerald-400">Tu Viaje</p>
+        <h1 class="mt-2 text-3xl font-bold">Panel de administración</h1>
+        <p class="mt-2 text-slate-400">Sube imágenes y asígnalas a los elementos de cada destino.</p>
+      </div>
+      <a href="../" class="rounded-xl border border-slate-700 px-4 py-2 text-sm hover:bg-slate-800">Ver como cliente ↗</a>
     </header>
 
     <section id="login" class="rounded-2xl border border-slate-800 bg-slate-900 p-6">
@@ -19,49 +22,86 @@
       <label for="password" class="mt-5 block text-sm text-slate-300">Contraseña</label>
       <input id="password" type="password" autocomplete="current-password" class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 p-3 outline-none focus:border-emerald-500" placeholder="Contraseña de administrador">
       <button id="enter" class="mt-4 rounded-lg bg-emerald-600 px-5 py-3 font-semibold hover:bg-emerald-500">Continuar</button>
-      <p id="loginMessage" class="mt-3 text-sm text-amber-300" role="status">La contraseña se comprobará en el servidor al cargar la primera imagen.</p>
+      <p id="loginMessage" class="mt-3 text-sm text-amber-300" role="status">La contraseña se valida en el servidor cuando guardas los cambios.</p>
     </section>
 
-    <section id="uploader" class="mt-6 hidden rounded-2xl border border-slate-800 bg-slate-900 p-6">
-      <div class="grid gap-5 sm:grid-cols-2">
-        <div>
-          <label for="folder" class="block text-sm text-slate-300">Tipo de contenido</label>
-          <select id="folder" class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 p-3">
-            <option value="destinos">Destinos</option>
-            <option value="comidas">Comidas</option>
-            <option value="hoteles">Hoteles</option>
-            <option value="recomendaciones">Recomendaciones</option>
-          </select>
-        </div>
-        <div>
-          <label for="reference" class="block text-sm text-slate-300">Nombre de referencia (opcional)</label>
-          <input id="reference" class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 p-3" placeholder="Ej. Cartagena">
-        </div>
+    <section id="uploader" class="mt-6 hidden space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-900 p-4">
+        <p class="text-sm text-emerald-300">Sesión de administración activa en esta pestaña.</p>
+        <button id="logout" class="rounded-lg border border-slate-700 px-4 py-2 text-sm hover:bg-slate-800">Salir del modo administrador</button>
       </div>
 
-      <label for="imageFile" class="mt-5 block text-sm text-slate-300">Selecciona una imagen (PNG, JPG o WebP; máximo 5 MB)</label>
-      <input id="imageFile" type="file" accept="image/png,image/jpeg,image/webp" class="mt-2 block w-full rounded-lg border border-slate-700 bg-slate-950 p-3 text-sm">
-      <img id="preview" alt="Vista previa de la imagen seleccionada" class="mt-5 hidden max-h-72 max-w-full rounded-xl object-contain">
-      <button id="upload" class="mt-5 rounded-lg bg-emerald-600 px-5 py-3 font-semibold hover:bg-emerald-500">Subir imagen a GitHub</button>
-      <p id="status" class="mt-4 text-sm" role="status" aria-live="polite"></p>
-      <div id="result" class="mt-3 break-all text-sm text-emerald-300"></div>
+      <section class="rounded-2xl border border-slate-800 bg-slate-900 p-6">
+        <h2 class="text-xl font-semibold">1. ¿A qué elemento pertenece la imagen?</h2>
+        <p class="mt-1 text-sm text-slate-400">Usa el identificador del destino que aparece en la base de datos (por ejemplo: cartagena, cancun o bogota).</p>
+        <div class="mt-5 grid gap-4 sm:grid-cols-2">
+          <div>
+            <label for="destinationId" class="block text-sm text-slate-300">ID del destino</label>
+            <input id="destinationId" class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 p-3" placeholder="cartagena">
+          </div>
+          <div>
+            <label for="kind" class="block text-sm text-slate-300">Tipo de elemento</label>
+            <select id="kind" class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 p-3">
+              <option value="destino">Imagen principal del destino</option>
+              <option value="lugares">Lugar turístico</option>
+              <option value="comida">Comida típica</option>
+              <option value="hospedaje">Hotel / hospedaje</option>
+            </select>
+          </div>
+          <div>
+            <label for="itemIndex" class="block text-sm text-slate-300">Número del elemento</label>
+            <select id="itemIndex" class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 p-3">
+              <option value="0">Elemento 1</option><option value="1">Elemento 2</option>
+              <option value="2">Elemento 3</option><option value="3">Elemento 4</option>
+              <option value="4">Elemento 5</option>
+            </select>
+            <p class="mt-1 text-xs text-slate-500">Para la imagen principal del destino se usa siempre el elemento 1.</p>
+          </div>
+          <div>
+            <label for="imageFile" class="block text-sm text-slate-300">Imagen (PNG, JPG o WebP; máximo 5 MB)</label>
+            <input id="imageFile" type="file" accept="image/png,image/jpeg,image/webp" class="mt-2 block w-full rounded-lg border border-slate-700 bg-slate-950 p-3 text-sm">
+          </div>
+        </div>
+        <img id="preview" alt="Vista previa" class="mt-5 hidden max-h-72 max-w-full rounded-xl object-contain">
+        <button id="upload" class="mt-5 rounded-lg bg-emerald-600 px-5 py-3 font-semibold hover:bg-emerald-500">Subir y guardar asociación</button>
+        <p id="status" class="mt-4 text-sm" role="status" aria-live="polite"></p>
+        <div id="result" class="mt-3 break-all text-sm text-emerald-300"></div>
+      </section>
+      <p class="text-xs text-slate-500">Cada asociación se guarda en img/itinerarios.json dentro del repositorio. Los cambios se publican cuando GitHub Pages actualiza el sitio.</p>
     </section>
-    <p class="mt-8 text-xs text-slate-500">Las imágenes se guardan en el repositorio del sitio. La asociación automática con destinos y documentos PDF se configura en un paso posterior.</p>
   </main>
 
   <script>
     const WORKER_URL = 'https://tu-viaje.jgaravitom.workers.dev/';
-    const $ = (id) => document.getElementById(id);
+    const $ = id => document.getElementById(id);
     let adminPassword = '';
 
     $('enter').addEventListener('click', () => {
-      adminPassword = $('password').value;
-      if (!adminPassword) {
+      const value = $('password').value;
+      if (!value) {
         $('loginMessage').textContent = 'Ingresa la contraseña para continuar.';
         return;
       }
+      adminPassword = value;
       $('login').classList.add('hidden');
       $('uploader').classList.remove('hidden');
+    });
+
+    $('logout').addEventListener('click', () => {
+      adminPassword = '';
+      $('password').value = '';
+      $('imageFile').value = '';
+      $('preview').classList.add('hidden');
+      $('status').textContent = '';
+      $('result').textContent = '';
+      $('uploader').classList.add('hidden');
+      $('login').classList.remove('hidden');
+      $('loginMessage').textContent = 'Sesión cerrada.';
+    });
+
+    $('kind').addEventListener('change', () => {
+      $('itemIndex').disabled = $('kind').value === 'destino';
+      if ($('kind').value === 'destino') $('itemIndex').value = '0';
     });
 
     $('imageFile').addEventListener('change', () => {
@@ -72,10 +112,32 @@
       $('result').textContent = '';
     });
 
+    async function postWorker(payload) {
+      const response = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Password': adminPassword
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.details || data.error || 'No se pudo completar la operación.');
+      return data;
+    }
+
     $('upload').addEventListener('click', async () => {
       const file = $('imageFile').files[0];
+      const destinationId = $('destinationId').value.trim().toLowerCase();
+      const kind = $('kind').value;
+      const itemIndex = Number($('itemIndex').value);
       $('status').textContent = '';
       $('result').textContent = '';
+
+      if (!/^[a-zA-Z0-9_-]{1,80}$/.test(destinationId)) {
+        $('status').textContent = 'Escribe un ID de destino válido, sin espacios ni tildes.';
+        return;
+      }
       if (!file) {
         $('status').textContent = 'Selecciona una imagen primero.';
         return;
@@ -89,9 +151,15 @@
         return;
       }
 
+      const folderByKind = {
+        destino: 'destinos',
+        lugares: 'recomendaciones',
+        comida: 'comidas',
+        hospedaje: 'hoteles'
+      };
+
       $('upload').disabled = true;
-      $('upload').textContent = 'Subiendo…';
-      $('status').textContent = 'Preparando imagen…';
+      $('upload').textContent = 'Subiendo imagen…';
       try {
         const base64 = await new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -99,34 +167,35 @@
           reader.onerror = () => reject(new Error('No se pudo leer el archivo.'));
           reader.readAsDataURL(file);
         });
-        const response = await fetch(WORKER_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Admin-Password': adminPassword
-          },
-          body: JSON.stringify({
-            filename: file.name,
-            contentBase64: base64,
-            contentType: file.type,
-            folder: $('folder').value,
-            reference: $('reference').value.trim()
-          })
+
+        const uploaded = await postWorker({
+          filename: file.name,
+          contentBase64: base64,
+          contentType: file.type,
+          folder: folderByKind[kind]
         });
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(data.error || 'No se pudo subir la imagen. Verifica la contraseña y los secretos del Worker.');
-        $('status').textContent = 'Imagen subida correctamente.';
-        const path = document.createElement('p');
-        path.textContent = 'Ruta: ' + (data.path || '');
-        $('result').appendChild(path);
-        if (data.url) {
-          const link = document.createElement('a');
-          link.href = data.url;
-          link.target = '_blank';
-          link.rel = 'noopener noreferrer';
-          link.textContent = 'Abrir imagen';
-          link.className = 'underline';
-          $('result').appendChild(link);
+
+        $('upload').textContent = 'Guardando asociación…';
+        await postWorker({
+          action: 'save-metadata',
+          destinationId,
+          kind,
+          itemIndex,
+          imagePath: uploaded.path
+        });
+
+        $('status').textContent = '¡Imagen subida y asociada correctamente!';
+        const p = document.createElement('p');
+        p.textContent = 'Destino: ' + destinationId + ' · Elemento: ' + (itemIndex + 1);
+        $('result').appendChild(p);
+        if (uploaded.url) {
+          const a = document.createElement('a');
+          a.href = uploaded.url;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.textContent = 'Ver imagen guardada';
+          a.className = 'underline';
+          $('result').appendChild(a);
         }
         $('imageFile').value = '';
         $('preview').classList.add('hidden');
@@ -134,7 +203,7 @@
         $('status').textContent = error.message || 'Ocurrió un error durante la carga.';
       } finally {
         $('upload').disabled = false;
-        $('upload').textContent = 'Subir imagen a GitHub';
+        $('upload').textContent = 'Subir y guardar asociación';
       }
     });
   </script>
