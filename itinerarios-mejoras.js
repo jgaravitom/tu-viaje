@@ -26,7 +26,7 @@
     label.className='relative overflow-hidden bg-slate-800/80 border border-slate-700 rounded-2xl flex flex-col cursor-pointer hover:border-blue-500 transition';
     const src=ruta(dest,tipo,item.texto,item.indice,plan), input=tipo==='hospedaje'?'radio':'checkbox';
     const img=src?'<img class="w-full h-36 object-cover" alt="" src="'+src.replace(/"/g,'&quot;')+'" onerror="this.remove()">':'';
-    label.innerHTML=img+'<div class="p-4 flex gap-3 items-start"><input type="'+input+'" name="seleccion-'+tipo+'" value="'+item.indice+'" '+(tipo==='hospedaje'?'':'checked')+' class="mt-1 accent-blue-500"><span class="text-slate-100 text-sm">'+(pos+1)+'. '+item.texto.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span></div>';
+    label.innerHTML=img+'<div class="p-4 flex gap-3 items-start"><input type="'+input+'" name="seleccion-'+tipo+'" value="'+item.indice+'" '+'checked'+' class="mt-1 accent-blue-500"><span class="text-slate-100 text-sm">'+(pos+1)+'. '+item.texto.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</span></div>';
     return label;
   }
   function render(dest,tipo,plan){
