@@ -286,5 +286,12 @@
         "bangkok-comida-khao-soi": "img/comidas/1793562201600-Khao-Soi-jpeg.jpg"
       }
     }
+  },
+  "singapur": {
+    "shared": {
+      "lugares": {
+        "singapur-lugares-marina-bay-sands": "img/recomendaciones/1793562544879-Marina-Bay-Sands-jpeg.jpg"
+      }
+    }
   }
 }
