@@ -465,5 +465,12 @@
         "ushuaia-comida-empanadas-de-cordero": "img/comidas/1793568832029-Empanadas-de-cordero-jpeg.jpg"
       }
     }
+  },
+  "quebec": {
+    "shared": {
+      "comida": {
+        "quebec-comida-poutine": "img/comidas/1793569061891-Poutine-webp.webp"
+      }
+    }
   }
 }
