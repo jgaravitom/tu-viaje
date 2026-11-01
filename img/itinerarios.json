@@ -505,7 +505,8 @@
   "oslo": {
     "shared": {
       "comida": {
-        "oslo-comida-salmon-noruego-laks": "img/comidas/1793570331497-Salmon-noruego-Laks-jpeg.jpg"
+        "oslo-comida-salmon-noruego-laks": "img/comidas/1793570331497-Salmon-noruego-Laks-jpeg.jpg",
+        "oslo-comida-brunost-queso-marron": "img/comidas/1793570343684-Brunost-Queso-marron-jpeg.jpg"
       }
     }
   }
