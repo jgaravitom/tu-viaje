@@ -196,5 +196,12 @@
         "rio-comida-acai-na-tigela": "img/comidas/1793558160458-Acai-na-tigela-jpeg.jpg"
       }
     }
+  },
+  "medellin": {
+    "shared": {
+      "lugares": {
+        "medellin-lugares-comuna-13": "img/recomendaciones/1793558713429-comuna-13-jpeg.jpg"
+      }
+    }
   }
 }
