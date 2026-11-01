@@ -124,5 +124,12 @@
         "phuket-comida-mango-sticky-rice": "img/comidas/1793555789398-MANGO-jpeg.jpg"
       }
     }
+  },
+  "bali": {
+    "shared": {
+      "lugares": {
+        "bali-lugares-templo-uluwatu": "img/recomendaciones/1793555844821-TEMPLO-jpeg.jpg"
+      }
+    }
   }
 }
