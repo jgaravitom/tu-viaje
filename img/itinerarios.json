@@ -340,5 +340,12 @@
         "buenos-aires-comida-choripan": "img/comidas/1793563684823-Choripan-webp.webp"
       }
     }
+  },
+  "san_francisco": {
+    "shared": {
+      "lugares": {
+        "san-francisco-lugares-puente-golden-gate": "img/recomendaciones/1793563936818-Puente-Golden-Gate-jpg.jpg"
+      }
+    }
   }
 }
