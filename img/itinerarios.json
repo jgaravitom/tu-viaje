@@ -627,5 +627,12 @@
         "seul-lugares-rio-han": "img/recomendaciones/1793573646905-RIO-jpeg.jpg"
       }
     }
+  },
+  "kioto": {
+    "shared": {
+      "lugares": {
+        "kioto-lugares-bosque-de-bambu-de-arashiyama": "img/recomendaciones/1793573668076-BOSQUE-jpeg.jpg"
+      }
+    }
   }
 }
