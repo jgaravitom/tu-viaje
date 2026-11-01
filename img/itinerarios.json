@@ -322,5 +322,12 @@
         "dubai-comida-luqaimat": "img/comidas/1793563065440-Luqaimat-jpeg.jpg"
       }
     }
+  },
+  "buenos_aires": {
+    "shared": {
+      "lugares": {
+        "buenos-aires-lugares-caminito-la-boca": "img/recomendaciones/1793563582813-Caminito-La-Boca-jpg.jpg"
+      }
+    }
   }
 }
