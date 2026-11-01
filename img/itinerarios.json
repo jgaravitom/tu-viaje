@@ -52,5 +52,12 @@
         "punta-cana-comida-yaniqueques": "img/comidas/1793555159175-yaniqueques-jpg.jpg"
       }
     }
+  },
+  "mallorca": {
+    "shared": {
+      "lugares": {
+        "mallorca-lugares-cala-agulla": "img/recomendaciones/1793555187673-CALA-AGULLA-jpeg.jpg"
+      }
+    }
   }
 }
