@@ -411,5 +411,12 @@
         "oporto-comida-caldo-verde": "img/comidas/1793567601887-Caldo-Verde-jpeg.jpg"
       }
     }
+  },
+  "paris": {
+    "shared": {
+      "lugares": {
+        "paris-lugares-torre-eiffel": "img/recomendaciones/1793567884897-Torre-Eiffel-webp.webp"
+      }
+    }
   }
 }
