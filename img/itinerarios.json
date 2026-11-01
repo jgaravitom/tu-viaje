@@ -70,5 +70,12 @@
         "mallorca-comida-frit-mallorqui": "img/comidas/1793555348666-FRIT-jpeg.jpg"
       }
     }
+  },
+  "nice": {
+    "shared": {
+      "lugares": {
+        "nice-lugares-promenade-des-anglais": "img/recomendaciones/1793555397728-PROMENADE-jpeg.jpg"
+      }
+    }
   }
 }
