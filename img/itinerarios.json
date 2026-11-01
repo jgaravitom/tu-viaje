@@ -595,7 +595,8 @@
   "tokio": {
     "shared": {
       "comida": {
-        "tokio-comida-sushi-y-sashimi": "img/comidas/1793573385351-SUSHI-jpeg.jpg"
+        "tokio-comida-sushi-y-sashimi": "img/comidas/1793573385351-SUSHI-jpeg.jpg",
+        "tokio-comida-ramen-tonkotsu": "img/comidas/1793573399804-RAMEN-jpeg.jpg"
       }
     }
   }
