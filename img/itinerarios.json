@@ -429,5 +429,12 @@
         "paris-comida-crepes-suzette": "img/comidas/1793567983423-Crepes-suzette-jpeg.jpg"
       }
     }
+  },
+  "bariloche": {
+    "shared": {
+      "lugares": {
+        "bariloche-lugares-cerro-catedral": "img/recomendaciones/1793568306253-Cerro-Catedral-jpeg.jpg"
+      }
+    }
   }
 }
