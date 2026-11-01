@@ -172,7 +172,7 @@ window.TU_GUIA_DESTINOS = {
               lugares: ["Mundo de Hielo y Nieve de Harbin", "Calle Central (Zhongyang Street)", "Catedral de Santa Sofía", "Parque de la Ribera del Río Songhua", "Tigre Park"],
               comida: ["Salchicha ahumada de Harbin", "Guobaorou (Cerdo agridulce crujiente)", "Dumplings de Harbin (Jiaozi)", "Oso de hielo helado", "Brochetas Tanghulu"],
               hospedaje: ["Shangri-La Harbin ($180 USD/noche)", "Kempinski Hotel Harbin ($160 USD/noche)", "Harbin International Youth Hostel ($30 USD/noche)", "Sofitel Harbin ($140 USD/noche)", "Harbin Central Street Hostel ($28 USD/noche)"] },
-            { id: "ulán_bator", nombre: "Ulán Bator, Mongolia", epoca: "Noviembre a Febrero (Invierno estepario extremo)", img: "ulan-bator.png",
+            { id: "ulan_bator", nombre: "Ulán Bator, Mongolia", epoca: "Noviembre a Febrero (Invierno estepario extremo)", img: "ulan-bator.png",
               lugares: ["Plaza de Sukhbaatar", "Monumento a Zaisan", "Monasterio Gandantegchinlen", "Parque Nacional Terelj", "Museo Nacional de Mongolia"],
               comida: ["Buuz (Dumplings al vapor)", "Khuushuur", "Boodog", "Suutei Tsai (Té con leche salada)", "Airag"],
               hospedaje: ["Shangri-La Ulaanbaatar ($220 USD/noche)", "Kempinski Hotel Khan Palace ($180 USD/noche)", "UB Guesthouse ($25 USD/noche)", "Blue Sky Hotel ($150 USD/noche)", "Sunpath Mongolia Hostel ($20 USD/noche)"] }
