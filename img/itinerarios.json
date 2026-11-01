@@ -393,5 +393,12 @@
         "londres-comida-sticky-toffee-pudding": "img/comidas/1793566997007-Sticky-Toffee-Pudding-jpg.jpg"
       }
     }
+  },
+  "oporto": {
+    "shared": {
+      "lugares": {
+        "oporto-lugares-puente-don-luis-i": "img/recomendaciones/1793567330899-Puente-Don-Luis-I-webp.webp"
+      }
+    }
   }
 }
