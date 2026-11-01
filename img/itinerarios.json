@@ -591,5 +591,12 @@
         "ulan-bator-comida-airag": "img/comidas/1793573114714-Airag-jpeg.jpg"
       }
     }
+  },
+  "tokio": {
+    "shared": {
+      "comida": {
+        "tokio-comida-sushi-y-sashimi": "img/comidas/1793573385351-SUSHI-jpeg.jpg"
+      }
+    }
   }
 }
