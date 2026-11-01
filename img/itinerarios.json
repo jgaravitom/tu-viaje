@@ -501,5 +501,12 @@
         "reikiavik-comida-skyr": "img/comidas/1793570127035-Skyr-jpeg.jpg"
       }
     }
+  },
+  "oslo": {
+    "shared": {
+      "comida": {
+        "oslo-comida-salmon-noruego-laks": "img/comidas/1793570331497-Salmon-noruego-Laks-jpeg.jpg"
+      }
+    }
   }
 }
