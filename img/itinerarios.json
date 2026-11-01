@@ -376,5 +376,12 @@
         "bogota-comida-obleas-con-arequipe": "img/comidas/1793564741904-Obleas-con-arequipe-jpeg.jpg"
       }
     }
+  },
+  "londres": {
+    "shared": {
+      "lugares": {
+        "londres-lugares-big-ben-y-palacio-de-westminster": "img/recomendaciones/1793566918012-Big-Ben-y-Palacio-de-Westminster-jpg.jpg"
+      }
+    }
   }
 }
