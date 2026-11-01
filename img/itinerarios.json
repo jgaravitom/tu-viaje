@@ -541,7 +541,8 @@
   "sapporo": {
     "shared": {
       "comida": {
-        "sapporo-comida-ramen-de-sapporo-miso-ramen": "img/comidas/1793571487333-Ramen-de-Sapporo-Miso-Ramen-jpeg.jpg"
+        "sapporo-comida-ramen-de-sapporo-miso-ramen": "img/comidas/1793571487333-Ramen-de-Sapporo-Miso-Ramen-jpeg.jpg",
+        "sapporo-comida-sopa-curry-soup-curry": "img/comidas/1793571495785-Sopa-Curry-Soup-Curry-jpeg.jpg"
       }
     }
   }
