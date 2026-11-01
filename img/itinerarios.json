@@ -178,5 +178,12 @@
         "miami-comida-empanadas-argentinas": "img/comidas/1793557489499-Empanadas-argentinas-jpeg.jpg"
       }
     }
+  },
+  "rio": {
+    "shared": {
+      "lugares": {
+        "rio-lugares-cristo-redentor": "img/recomendaciones/1793557951027-cristo-jpg.jpg"
+      }
+    }
   }
 }
