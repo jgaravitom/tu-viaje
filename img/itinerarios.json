@@ -250,5 +250,12 @@
         "atenas-comida-spanakopita": "img/comidas/1793561401172-Spanakopita-jpeg.jpg"
       }
     }
+  },
+  "roma": {
+    "shared": {
+      "lugares": {
+        "roma-lugares-coliseo-romano": "img/recomendaciones/1793561771145-Coliseo-Romano-jpg.jpg"
+      }
+    }
   }
 }
