@@ -519,5 +519,12 @@
         "oslo-lugares-museo-de-barcos-vikingos": "img/recomendaciones/1793570460457-Museo-de-barcos-vikingos-jpeg.jpg"
       }
     }
+  },
+  "rovaniemi": {
+    "shared": {
+      "lugares": {
+        "rovaniemi-lugares-aldea-de-papa-noel-santa-claus-village": "img/recomendaciones/1793570927598-Aldea-de-Papa-Noel-Santa-Claus-Village-jpeg.jpg"
+      }
+    }
   }
 }
