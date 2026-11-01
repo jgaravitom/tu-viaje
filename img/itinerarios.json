@@ -160,5 +160,12 @@
         "langkawi-comida-ikan-bakar": "img/comidas/1793556651825-IKAN-jpeg.jpg"
       }
     }
+  },
+  "miami": {
+    "shared": {
+      "lugares": {
+        "miami-lugares-south-beach": "img/recomendaciones/1793557406226-South-Beach-jpeg.jpg"
+      }
+    }
   }
 }
