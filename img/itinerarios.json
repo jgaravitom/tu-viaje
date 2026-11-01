@@ -573,5 +573,12 @@
         "harbin-comida-brochetas-tanghulu": "img/comidas/1793571919275-Brochetas-Tanghulu-jpeg.jpg"
       }
     }
+  },
+  "ulan_bator": {
+    "shared": {
+      "lugares": {
+        "ulan-bator-lugares-plaza-de-sukhbaatar": "img/recomendaciones/1793572956056-Plaza-de-Sukhbaatar-jpeg.jpg"
+      }
+    }
   }
 }
