@@ -609,5 +609,12 @@
         "tokio-lugares-santuario-meiji": "img/recomendaciones/1793573509447-santuario-jpeg.jpg"
       }
     }
+  },
+  "seul": {
+    "shared": {
+      "comida": {
+        "seul-comida-barbacoa-coreana-samgyeopsal": "img/comidas/1793573544994-BARBACOA-jpeg.jpg"
+      }
+    }
   }
 }
