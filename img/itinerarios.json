@@ -433,7 +433,8 @@
   "bariloche": {
     "shared": {
       "lugares": {
-        "bariloche-lugares-cerro-catedral": "img/recomendaciones/1793568306253-Cerro-Catedral-jpeg.jpg"
+        "bariloche-lugares-cerro-catedral": "img/recomendaciones/1793568306253-Cerro-Catedral-jpeg.jpg",
+        "bariloche-lugares-circuito-chico": "img/recomendaciones/1793568315467-Circuito-Chico-jpg.jpg"
       }
     }
   }
