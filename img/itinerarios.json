@@ -597,7 +597,8 @@
       "comida": {
         "tokio-comida-sushi-y-sashimi": "img/comidas/1793573385351-SUSHI-jpeg.jpg",
         "tokio-comida-ramen-tonkotsu": "img/comidas/1793573399804-RAMEN-jpeg.jpg",
-        "tokio-comida-tempura": "img/comidas/1793573408800-TEMPURA-jpeg.jpg"
+        "tokio-comida-tempura": "img/comidas/1793573408800-TEMPURA-jpeg.jpg",
+        "tokio-comida-takoyaki": "img/comidas/1793573450923-TAKOYAKI-jpeg.jpg"
       }
     }
   }
