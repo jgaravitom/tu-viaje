@@ -304,5 +304,12 @@
         "singapur-comida-roti-prata": "img/comidas/1793562636411-Roti-Prata-jpeg.jpg"
       }
     }
+  },
+  "dubai": {
+    "shared": {
+      "lugares": {
+        "dubai-lugares-burj-khalifa": "img/recomendaciones/1793562859530-Burj-Khalifa-jpeg.jpg"
+      }
+    }
   }
 }
