@@ -106,5 +106,12 @@
         "antalya-comida-baklava": "img/comidas/1793555654637-BAKLAVA-jpeg.jpg"
       }
     }
+  },
+  "phuket": {
+    "shared": {
+      "lugares": {
+        "phuket-lugares-playa-patong": "img/recomendaciones/1793555673366-PLAYA-jpeg.jpg"
+      }
+    }
   }
 }
