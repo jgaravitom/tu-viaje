@@ -16,5 +16,12 @@
         "cancun-comida-panuchos-y-salbutes": "img/comidas/1793494136909-panuchos-jpeg.jpg"
       }
     }
+  },
+  "cartagena": {
+    "shared": {
+      "lugares": {
+        "cartagena-lugares-ciudad-amurallada": "img/recomendaciones/1793554852810-ciudad-amurallada-jpg.jpg"
+      }
+    }
   }
 }
