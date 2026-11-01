@@ -447,5 +447,12 @@
         "bariloche-comida-cerveza-artesanal-patagonica": "img/comidas/1793568388543-Cerveza-artesanal-patagonica-jpeg.jpg"
       }
     }
+  },
+  "ushuaia": {
+    "shared": {
+      "lugares": {
+        "ushuaia-lugares-parque-nacional-tierra-del-fuego": "img/recomendaciones/1793568694465-Parque-Nacional-Tierra-del-Fuego-jpeg.jpg"
+      }
+    }
   }
 }
