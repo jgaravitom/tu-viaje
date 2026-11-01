@@ -358,5 +358,12 @@
         "san-francisco-comida-fortune-cookies": "img/comidas/1793564020580-Fortune-Cookies-jpeg.jpg"
       }
     }
+  },
+  "bogota": {
+    "shared": {
+      "lugares": {
+        "bogota-lugares-cerro-de-monserrate": "img/recomendaciones/1793564630731-Cerro-de-Monserrate-jpeg.jpg"
+      }
+    }
   }
 }
