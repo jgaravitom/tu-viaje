@@ -487,7 +487,8 @@
   "reikiavik": {
     "shared": {
       "lugares": {
-        "reikiavik-lugares-iglesia-hallgrimskirkja": "img/recomendaciones/1793570037448-Iglesia-Hallgrimskirkja-jpeg.jpg"
+        "reikiavik-lugares-iglesia-hallgrimskirkja": "img/recomendaciones/1793570037448-Iglesia-Hallgrimskirkja-jpeg.jpg",
+        "reikiavik-lugares-harpa-concert-hall": "img/recomendaciones/1793570051297-Harpa-Concert-Hall-jpeg.jpg"
       }
     }
   }
