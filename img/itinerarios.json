@@ -555,5 +555,12 @@
         "sapporo-lugares-mercado-nijo": "img/recomendaciones/1793571569621-Mercado-Nijo-jpeg.jpg"
       }
     }
+  },
+  "harbin": {
+    "shared": {
+      "lugares": {
+        "harbin-lugares-mundo-de-hielo-y-nieve-de-harbin": "img/recomendaciones/1793571834503-Mundo-de-Hielo-y-Nieve-de-Harbin-jpeg.jpg"
+      }
+    }
   }
 }
