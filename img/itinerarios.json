@@ -483,5 +483,12 @@
         "quebec-lugares-planes-de-abraham": "img/recomendaciones/1793569152316-Planes-de-Abraham-jpeg.jpg"
       }
     }
+  },
+  "reikiavik": {
+    "shared": {
+      "lugares": {
+        "reikiavik-lugares-iglesia-hallgrimskirkja": "img/recomendaciones/1793570037448-Iglesia-Hallgrimskirkja-jpeg.jpg"
+      }
+    }
   }
 }
