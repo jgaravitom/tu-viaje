@@ -510,6 +510,9 @@
         "oslo-comida-farikal": "img/comidas/1793570380864-Farikal-jpeg.jpg",
         "oslo-comida-kj-ttkaker": "img/comidas/1793570394914-Kj-ttkaker-jpeg.jpg",
         "oslo-comida-lapskaus": "img/comidas/1793570406858-Lapskaus-jpeg.jpg"
+      },
+      "lugares": {
+        "oslo-lugares-opera-de-oslo": "img/recomendaciones/1793570417558-Opera-de-Oslo-jpg.jpg"
       }
     }
   }
