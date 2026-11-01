@@ -88,5 +88,12 @@
         "nice-comida-pan-bagnat": "img/comidas/1793555523970-PAN-jpeg.jpg"
       }
     }
+  },
+  "antalya": {
+    "shared": {
+      "lugares": {
+        "antalya-lugares-casco-antiguo-kaleici": "img/recomendaciones/1793555541851-CASCO-jpeg.jpg"
+      }
+    }
   }
 }
