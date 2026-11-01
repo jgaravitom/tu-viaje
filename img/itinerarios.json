@@ -232,5 +232,12 @@
         "sevilla-comida-montadito-de-pringa": "img/comidas/1793560098992-Montadito-de-pringa-jpg.jpg"
       }
     }
+  },
+  "atenas": {
+    "shared": {
+      "lugares": {
+        "atenas-lugares-la-acropolis-y-partenon": "img/recomendaciones/1793561316372-Museo-de-la-Acropolis-jpeg-jfif.jpg"
+      }
+    }
   }
 }
