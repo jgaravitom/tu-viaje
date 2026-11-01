@@ -537,5 +537,12 @@
         "rovaniemi-comida-sampyla": "img/comidas/1793571044026-Sampyla-jpeg.jpg"
       }
     }
+  },
+  "sapporo": {
+    "shared": {
+      "comida": {
+        "sapporo-comida-ramen-de-sapporo-miso-ramen": "img/comidas/1793571487333-Ramen-de-Sapporo-Miso-Ramen-jpeg.jpg"
+      }
+    }
   }
 }
