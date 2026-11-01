@@ -34,5 +34,12 @@
         "cartagena-comida-cocadas-cartageneras": "img/comidas/1793554966546-cocada-jpg.jpg"
       }
     }
+  },
+  "punta_cana": {
+    "shared": {
+      "lugares": {
+        "punta-cana-lugares-playa-bavaro": "img/recomendaciones/1793555036754-BAVARO-jpg.jpg"
+      }
+    }
   }
 }
