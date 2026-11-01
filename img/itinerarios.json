@@ -469,7 +469,8 @@
   "quebec": {
     "shared": {
       "comida": {
-        "quebec-comida-poutine": "img/comidas/1793569061891-Poutine-webp.webp"
+        "quebec-comida-poutine": "img/comidas/1793569061891-Poutine-webp.webp",
+        "quebec-comida-tourtiere-pastel-de-carne": "img/comidas/1793569069759-Tourtiere-Pastel-de-carne-webp.webp"
       }
     }
   }
