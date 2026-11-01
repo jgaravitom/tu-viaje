@@ -268,5 +268,12 @@
         "roma-comida-gelato-artesanal": "img/comidas/1793561843657-Gelato-artesanal-jpeg.jpg"
       }
     }
+  },
+  "bangkok": {
+    "shared": {
+      "lugares": {
+        "bangkok-lugares-gran-palacio-de-bangkok": "img/recomendaciones/1793562110725-Gran-Palacio-de-Bangkok-jpeg.jpg"
+      }
+    }
   }
 }
