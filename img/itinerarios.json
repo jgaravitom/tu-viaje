@@ -142,5 +142,12 @@
         "bali-comida-lawar": "img/comidas/1793556508498-LAWAR-jpeg.jpg"
       }
     }
+  },
+  "langkawi": {
+    "shared": {
+      "lugares": {
+        "langkawi-lugares-puente-sky-bridge-de-langkawi": "img/recomendaciones/1793556558739-PUENTE-jpeg.jpg"
+      }
+    }
   }
 }
