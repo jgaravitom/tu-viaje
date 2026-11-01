@@ -600,6 +600,9 @@
         "tokio-comida-tempura": "img/comidas/1793573408800-TEMPURA-jpeg.jpg",
         "tokio-comida-takoyaki": "img/comidas/1793573450923-TAKOYAKI-jpeg.jpg",
         "tokio-comida-matcha-wagashi": "img/comidas/1793573460100-MATCHA-jpeg.jpg"
+      },
+      "lugares": {
+        "tokio-lugares-cruce-de-shibuya": "img/recomendaciones/1793573469789-CRUCE-jpeg.jpg"
       }
     }
   }
