@@ -204,17 +204,6 @@ const traducciones = {
         cont_america: "América",
         cont_europe: "Europa",
         cont_asia: "Asia y Oceanía",
-        budget_title: "¿Cuál es tu presupuesto?",
-        budget_subtitle: "Selecciona el nivel de presupuesto para filtrar los destinos disponibles.",
-        budget_low: "Presupuesto bajo",
-        budget_low_desc: "Opciones de hospedaje económico.",
-        budget_medium: "Presupuesto medio",
-        budget_medium_desc: "Opciones de hospedaje de costo moderado.",
-        budget_high: "Presupuesto alto",
-        budget_high_desc: "Opciones de hospedaje de mayor costo.",
-        budget_basis: "Clasificación orientativa según el precio mediano de las opciones de hospedaje listadas (USD por noche).",
-        budget_badge: "Presupuesto",
-        budget_empty: "No hay destinos clasificados en este nivel para los filtros seleccionados. Prueba otro presupuesto.",
         s4_title: "Elige tu Destino Ideal",
         s4_subtitle: "Selecciona el lugar que deseas visitar en este continente.",
         s5_title: "¿Qué tipo de plan prefieres?",
@@ -257,17 +246,6 @@ const traducciones = {
         cont_america: "Americas",
         cont_europe: "Europe",
         cont_asia: "Asia & Oceania",
-        budget_title: "What is your budget?",
-        budget_subtitle: "Select a budget level to filter the available destinations.",
-        budget_low: "Low budget",
-        budget_low_desc: "Economical accommodation options.",
-        budget_medium: "Medium budget",
-        budget_medium_desc: "Moderately priced accommodation options.",
-        budget_high: "High budget",
-        budget_high_desc: "Higher-cost accommodation options.",
-        budget_basis: "Indicative classification based on the median price of listed accommodation options (USD per night).",
-        budget_badge: "Budget",
-        budget_empty: "There are no destinations in this budget level for the selected filters. Try another budget.",
         s4_title: "Choose Your Ideal Destination",
         s4_subtitle: "Select the place you want to visit on this continent.",
         s5_title: "What type of plan do you prefer?",
@@ -310,17 +288,6 @@ const traducciones = {
         cont_america: "Amériques",
         cont_europe: "Europe",
         cont_asia: "Asie et Océanie",
-        budget_title: "Quel est votre budget ?",
-        budget_subtitle: "Sélectionnez un niveau de budget pour filtrer les destinations disponibles.",
-        budget_low: "Petit budget",
-        budget_low_desc: "Options d'hébergement économiques.",
-        budget_medium: "Budget moyen",
-        budget_medium_desc: "Options d'hébergement à coût modéré.",
-        budget_high: "Budget élevé",
-        budget_high_desc: "Options d'hébergement plus coûteuses.",
-        budget_basis: "Classification indicative selon le prix médian des hébergements indiqués (USD par nuit).",
-        budget_badge: "Budget",
-        budget_empty: "Aucune destination ne correspond à ce budget avec les filtres sélectionnés. Essayez un autre budget.",
         s4_title: "Choisissez votre destination idéale",
         s4_subtitle: "Sélectionnez l'endroit que vous souhaitez visiter sur ce continent.",
         s5_title: "Quel type de plan préférez-vous?",
@@ -358,7 +325,6 @@ class TuGuiaApp {
             clima: null,
             ambienteCalido: null,
             continente: null,
-            presupuesto: null,
             destinoSeleccionado: null,
             tipoPlan: null
         };
@@ -548,7 +514,7 @@ class TuGuiaApp {
         }
         
         // Ocultar todas las pantallas
-        const pantallas = ['screen-1', 'screen-2', 'screen-sub-calido', 'screen-3', 'screen-budget', 'screen-4', 'screen-5', 'screen-6'];
+        const pantallas = ['screen-1', 'screen-2', 'screen-sub-calido', 'screen-3', 'screen-4', 'screen-5', 'screen-6'];
         pantallas.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.classList.add('hidden');
@@ -581,7 +547,7 @@ class TuGuiaApp {
 
     irMenuPrincipal() {
         this.historyStack = [];
-        this.estado = { clima: null, ambienteCalido: null, continente: null, presupuesto: null, destinoSeleccionado: null, tipoPlan: null };
+        this.estado = { clima: null, ambienteCalido: null, continente: null, destinoSeleccionado: null, tipoPlan: null };
         document.getElementById('check-consent').checked = false;
         this.politicaLeida = false;
         document.getElementById('policy-hint').style.display = '';
@@ -611,37 +577,8 @@ class TuGuiaApp {
 
     seleccionarContinente(continente) {
         this.estado.continente = continente;
-        this.estado.presupuesto = null;
-        this.navegarA('screen-budget');
-    }
-
-    seleccionarPresupuesto(presupuesto) {
-        this.estado.presupuesto = presupuesto;
         this.renderizarDestinos();
         this.navegarA('screen-4');
-    }
-
-    // Clasificación orientativa basada en el precio mediano de las opciones
-    // de hospedaje listadas para cada destino (USD por noche).
-    obtenerNivelPresupuesto(destino) {
-        const precios = (destino.hospedaje || [])
-            .map(opcion => {
-                const coincidencia = opcion.match(/\$\s*([\d,]+)/);
-                return coincidencia ? Number(coincidencia[1].replace(/,/g, '')) : null;
-            })
-            .filter(precio => Number.isFinite(precio))
-            .sort((a, b) => a - b);
-
-        if (!precios.length) return 'medio';
-
-        const mitad = Math.floor(precios.length / 2);
-        const precioMediano = precios.length % 2
-            ? precios[mitad]
-            : (precios[mitad - 1] + precios[mitad]) / 2;
-
-        if (precioMediano <= 150) return 'bajo';
-        if (precioMediano <= 250) return 'medio';
-        return 'alto';
     }
 
     renderizarDestinos() {
@@ -655,19 +592,7 @@ class TuGuiaApp {
             listaDestinos = baseDatosDestinos[this.estado.clima][this.estado.continente];
         }
 
-        listaDestinos = listaDestinos.filter(
-            dest => this.obtenerNivelPresupuesto(dest) === this.estado.presupuesto
-        );
-
-        if (!listaDestinos.length) {
-            const t = traducciones[this.lang];
-            contenedor.innerHTML = `<p class="col-span-full text-center text-slate-300 bg-slate-800/70 border border-slate-700 rounded-2xl p-6">${t.budget_empty}</p>`;
-            return;
-        }
-
         listaDestinos.forEach(dest => {
-            const nivelPresupuesto = this.obtenerNivelPresupuesto(dest);
-            const etiquetaPresupuesto = traducciones[this.lang].budget_badge;
             // Carga de imagen local en img/ con respaldo automático si no existe
             const rutaImagenLocal = `img/${dest.img}`;
             const card = document.createElement('div');
@@ -679,7 +604,6 @@ class TuGuiaApp {
                     <img src="${rutaImagenLocal}" alt="${dest.nombre}" onerror="this.onerror=null; this.src='img/fondo.png';" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80"></div>
                     <span class="absolute bottom-3 left-3 bg-blue-600/90 text-white text-xs px-3 py-1 rounded-full font-medium shadow-md">Clima Ideal</span>
-                    <span class="absolute top-3 right-3 bg-emerald-600/90 text-white text-xs px-3 py-1 rounded-full font-medium shadow-md">${etiquetaPresupuesto}: ${nivelPresupuesto}</span>
                 </div>
                 <div class="p-5 flex flex-col flex-grow justify-between">
                     <div>
