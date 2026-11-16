@@ -17,7 +17,24 @@
   }
   function kindLegacy(t){return t==='lugares'?'lugares':t==='comida'?'comida':'hospedaje';}
   function filtrar(items,tipo,plan){
-    const arr=(items||[]).map((texto,indice)=>({texto,indice}));
+    let arr=(items||[]).map((texto,indice)=>({texto,indice}));
+    // El presupuesto se aplica al precio USD/noche sin alterar los índices originales,
+    // para conservar la correspondencia de las imágenes del catálogo.
+    if(tipo==='hospedaje'){
+      const presupuesto=app.estado.presupuesto;
+      const precio=item=>{const m=String(item.texto).match(/\$\s*([\d,]+(?:\.\d+)?)/);return m?Number(m[1].replace(/,/g,'')):null;};
+      if(presupuesto){
+        arr=arr.filter(item=>{
+          const valor=precio(item);
+          if(valor===null)return false;
+          if(presupuesto==='bajo')return valor<=75;
+          if(presupuesto==='medio')return valor>75&&valor<=250;
+          if(presupuesto==='alto')return valor>250;
+          return true;
+        });
+      }
+      return arr;
+    }
     if(plan==='todas'||tipo!=='lugares') return arr;
     const cfg=PLANES[plan]; return cfg?arr.filter(x=>cfg.re.test(x.texto)):[];
   }
@@ -52,7 +69,7 @@
     render(d,'lugares',p);render(d,'comida',p);render(d,'hospedaje',p);
     const old=document.getElementById('plan-description'); if(old)old.remove();
     const heading=document.querySelector('#screen-6 .text-center h2');
-    if(heading){const n=document.createElement('p');n.id='plan-description';n.className='mt-2 text-sm text-blue-300';n.textContent='Plan: '+(PLANES[p]?.label||'Todas las experiencias')+'. Marca las opciones que deseas incluir en tu PDF.';heading.insertAdjacentElement('afterend',n);}
+    if(heading){const n=document.createElement('p');n.id='plan-description';n.className='mt-2 text-sm text-blue-300';const niveles={bajo:'Presupuesto bajo (hasta US$75/noche)',medio:'Presupuesto medio (US$76–250/noche)',alto:'Presupuesto alto (más de US$250/noche)'};n.textContent='Presupuesto: '+(niveles[this.estado.presupuesto]||'No especificado')+'. Plan: '+(PLANES[p]?.label||'Todas las experiencias')+'. Marca las opciones que deseas incluir en tu PDF.';heading.insertAdjacentElement('afterend',n);}
   };
   // PDF personalizado: conserva las selecciones y añade las imágenes de cada recomendación.
   const descargarPDFOriginal = app.descargarPDF.bind(app);

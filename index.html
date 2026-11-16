@@ -174,6 +174,29 @@
             </div>
         </section>
 
+        <!-- PANTALLA 3.5: Selección de presupuesto -->
+        <section id="screen-budget" class="hidden w-full bg-slate-900/90 backdrop-blur-xl border border-slate-700/80 rounded-3xl p-6 md:p-10 shadow-2xl text-center">
+            <h2 class="text-2xl md:text-3xl font-bold mb-3 text-white" data-i18n="budget_title">¿Cuál es tu presupuesto para hospedaje?</h2>
+            <p class="text-slate-300 mb-8 text-sm md:text-base" data-i18n="budget_subtitle">Elige cuánto deseas invertir por noche en alojamiento (valores orientativos en USD).</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+                <button onclick="app.seleccionarPresupuesto('bajo')" class="group bg-slate-800/80 hover:bg-emerald-900/40 border border-slate-700 hover:border-emerald-500 p-6 rounded-3xl transition shadow-xl flex flex-col items-center justify-center space-y-3">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-2xl"><i class="fa-solid fa-wallet"></i></div>
+                    <span class="text-xl font-bold text-white" data-i18n="budget_low">Presupuesto bajo</span>
+                    <span class="text-sm text-slate-300" data-i18n="budget_low_desc">Hasta US$75 por noche</span>
+                </button>
+                <button onclick="app.seleccionarPresupuesto('medio')" class="group bg-slate-800/80 hover:bg-amber-900/30 border border-slate-700 hover:border-amber-500 p-6 rounded-3xl transition shadow-xl flex flex-col items-center justify-center space-y-3">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-500/20 flex items-center justify-center text-amber-400 text-2xl"><i class="fa-solid fa-coins"></i></div>
+                    <span class="text-xl font-bold text-white" data-i18n="budget_medium">Presupuesto medio</span>
+                    <span class="text-sm text-slate-300" data-i18n="budget_medium_desc">US$76 a US$250 por noche</span>
+                </button>
+                <button onclick="app.seleccionarPresupuesto('alto')" class="group bg-slate-800/80 hover:bg-purple-900/30 border border-slate-700 hover:border-purple-500 p-6 rounded-3xl transition shadow-xl flex flex-col items-center justify-center space-y-3">
+                    <div class="w-14 h-14 rounded-2xl bg-purple-500/20 flex items-center justify-center text-purple-400 text-2xl"><i class="fa-solid fa-gem"></i></div>
+                    <span class="text-xl font-bold text-white" data-i18n="budget_high">Presupuesto alto</span>
+                    <span class="text-sm text-slate-300" data-i18n="budget_high_desc">Más de US$250 por noche</span>
+                </button>
+            </div>
+        </section>
+
         <!-- PANTALLA 4: Selección de Destino Específico -->
         <section id="screen-4" class="hidden w-full bg-slate-900/90 backdrop-blur-xl border border-slate-700/80 rounded-3xl p-6 md:p-10 shadow-2xl">
             <div class="text-center mb-8">
