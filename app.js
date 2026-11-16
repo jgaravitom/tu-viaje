@@ -204,6 +204,11 @@ const traducciones = {
         cont_america: "América",
         cont_europe: "Europa",
         cont_asia: "Asia y Oceanía",
+        budget_title: "¿Cuál es tu presupuesto para hospedaje?",
+        budget_subtitle: "Elige cuánto deseas invertir por noche en alojamiento (valores orientativos en USD).",
+        budget_low: "Presupuesto bajo", budget_low_desc: "Hasta US$75 por noche",
+        budget_medium: "Presupuesto medio", budget_medium_desc: "US$76 a US$250 por noche",
+        budget_high: "Presupuesto alto", budget_high_desc: "Más de US$250 por noche",
         s4_title: "Elige tu Destino Ideal",
         s4_subtitle: "Selecciona el lugar que deseas visitar en este continente.",
         s5_title: "¿Qué tipo de plan prefieres?",
@@ -246,6 +251,11 @@ const traducciones = {
         cont_america: "Americas",
         cont_europe: "Europe",
         cont_asia: "Asia & Oceania",
+        budget_title: "What is your accommodation budget?",
+        budget_subtitle: "Choose how much you want to spend per night (indicative prices in USD).",
+        budget_low: "Low budget", budget_low_desc: "Up to US$75 per night",
+        budget_medium: "Medium budget", budget_medium_desc: "US$76 to US$250 per night",
+        budget_high: "High budget", budget_high_desc: "More than US$250 per night",
         s4_title: "Choose Your Ideal Destination",
         s4_subtitle: "Select the place you want to visit on this continent.",
         s5_title: "What type of plan do you prefer?",
@@ -288,6 +298,11 @@ const traducciones = {
         cont_america: "Amériques",
         cont_europe: "Europe",
         cont_asia: "Asie et Océanie",
+        budget_title: "Quel est votre budget d’hébergement ?",
+        budget_subtitle: "Choisissez votre budget par nuit (prix indicatifs en USD).",
+        budget_low: "Petit budget", budget_low_desc: "Jusqu’à 75 USD par nuit",
+        budget_medium: "Budget moyen", budget_medium_desc: "De 76 à 250 USD par nuit",
+        budget_high: "Budget élevé", budget_high_desc: "Plus de 250 USD par nuit",
         s4_title: "Choisissez votre destination idéale",
         s4_subtitle: "Sélectionnez l'endroit que vous souhaitez visiter sur ce continent.",
         s5_title: "Quel type de plan préférez-vous?",
@@ -325,6 +340,7 @@ class TuGuiaApp {
             clima: null,
             ambienteCalido: null,
             continente: null,
+            presupuesto: null,
             destinoSeleccionado: null,
             tipoPlan: null
         };
@@ -514,7 +530,7 @@ class TuGuiaApp {
         }
         
         // Ocultar todas las pantallas
-        const pantallas = ['screen-1', 'screen-2', 'screen-sub-calido', 'screen-3', 'screen-4', 'screen-5', 'screen-6'];
+        const pantallas = ['screen-1', 'screen-2', 'screen-sub-calido', 'screen-3', 'screen-budget', 'screen-4', 'screen-5', 'screen-6'];
         pantallas.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.classList.add('hidden');
@@ -547,7 +563,7 @@ class TuGuiaApp {
 
     irMenuPrincipal() {
         this.historyStack = [];
-        this.estado = { clima: null, ambienteCalido: null, continente: null, destinoSeleccionado: null, tipoPlan: null };
+        this.estado = { clima: null, ambienteCalido: null, continente: null, presupuesto: null, destinoSeleccionado: null, tipoPlan: null };
         document.getElementById('check-consent').checked = false;
         this.politicaLeida = false;
         document.getElementById('policy-hint').style.display = '';
@@ -577,6 +593,12 @@ class TuGuiaApp {
 
     seleccionarContinente(continente) {
         this.estado.continente = continente;
+        this.estado.presupuesto = null;
+        this.navegarA('screen-budget');
+    }
+
+    seleccionarPresupuesto(presupuesto) {
+        this.estado.presupuesto = presupuesto;
         this.renderizarDestinos();
         this.navegarA('screen-4');
     }
