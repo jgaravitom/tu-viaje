@@ -35,8 +35,27 @@
       }
       return arr;
     }
-    if(plan==='todas'||tipo!=='lugares') return arr;
-    const cfg=PLANES[plan]; return cfg?arr.filter(x=>cfg.re.test(x.texto)):[];
+    // La cantidad de recomendaciones visibles depende del presupuesto elegido.
+    // Si hay un tipo de plan seleccionado, sus lugares se priorizan y se completan
+    // con otros del destino hasta alcanzar el número solicitado.
+    const presupuesto=app.estado.presupuesto||'alto';
+    const limites={
+      bajo:{lugares:2,comida:3},
+      medio:{lugares:3,comida:3},
+      alto:{lugares:5,comida:5}
+    };
+    const limite=limites[presupuesto]||limites.alto;
+    if(tipo==='lugares'){
+      if(plan!=='todas'&&PLANES[plan]){
+        const cfg=PLANES[plan];
+        const coinciden=arr.filter(x=>cfg.re.test(x.texto));
+        const restantes=arr.filter(x=>!cfg.re.test(x.texto));
+        arr=[...coinciden,...restantes];
+      }
+      return arr.slice(0,limite.lugares);
+    }
+    if(tipo==='comida') return arr.slice(0,limite.comida);
+    return arr;
   }
   function tarjeta(dest,tipo,item,pos,plan){
     const label=document.createElement('label');
