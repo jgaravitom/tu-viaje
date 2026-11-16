@@ -1,310 +1,63 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tu Guía - Viaja, Explora, Descubre</title>
-    <!-- Favicon local -->
-    <link rel="icon" href="img/Favicon.ico" type="image/x-icon">
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Google Fonts Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome para iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- jsPDF para generar el PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .bg-custom {
-            background-image: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.7)), url('img/fondo.png');
-            background-size: cover;
-            background-position: center;
-        }
-
-        /* Carrusel de destinos (se desplaza hacia la izquierda) */
-        .marquee {
-            overflow: hidden;
-            -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
-            mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
-        }
-        .marquee-track {
-            display: flex;
-            width: max-content;
-            animation: marquee-izquierda var(--dur, 140s) linear infinite;
-            will-change: transform;
-        }
-        .marquee:hover .marquee-track { animation-play-state: paused; }
-        .marquee-card { margin: 0 1rem 0 0; flex-shrink: 0; width: 15rem; height: 10rem; }
-        @media (min-width: 768px) { .marquee-card { width: 18rem; height: 11rem; } }
-        @keyframes marquee-izquierda {
-            from { transform: translateX(0); }  
-            to   { transform: translateX(-50%); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            .marquee-track { animation: none; }
-            .marquee { overflow-x: auto; }
-        }
-
-        /* Ventana flotante de la política */
-        #modal-politica .pol-body h4 { color: #fff; font-weight: 700; font-size: 1rem; margin: 1.5rem 0 .5rem; }
-        #modal-politica .pol-body p { margin-bottom: .6rem; line-height: 1.65; }
-    </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Administración de imágenes | Tu Guía</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-900 min-h-screen text-slate-100 flex flex-col justify-between bg-custom">
-
-    <!-- Header de navegación superior -->
-    <header class="w-full p-4 md:p-6 flex justify-between items-center max-w-7xl mx-auto">
-        <div class="flex items-center space-x-3 cursor-pointer" onclick="app.irMenuPrincipal()">
-            <img src="img/Logo.png" alt="Logo Tu Guía" class="h-16 sm:h-24 md:h-32 w-auto bg-white rounded-2xl px-4 py-2.5 md:px-6 md:py-3 shadow-2xl ring-1 ring-white/20 hover:scale-105 transition duration-300">
-        </div>
-        <div id="nav-controls" class="flex items-center space-x-3">
-            <!-- Botón de retroceso dinámico -->
-            <button id="btn-back" onclick="app.retroceder()" style="display:none" class="bg-slate-800/80 hover:bg-slate-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition border border-slate-700 shadow-md backdrop-blur-sm flex items-center space-x-2">
-                <i class="fa-solid fa-arrow-left"></i> <span id="txt-back">Atrás</span>
-            </button>
-            <!-- Botón menú principal -->
-            <button id="btn-home" onclick="app.irMenuPrincipal()" style="display:none" class="bg-slate-800/80 hover:bg-slate-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition border border-slate-700 shadow-md backdrop-blur-sm flex items-center space-x-2">
-                <i class="fa-solid fa-house"></i> <span id="txt-home">Menú</span>
-            </button>
-        </div>
-    </header>
-
-    <!-- Contenedor Principal Dinámico -->
-    <main class="w-full max-w-5xl mx-auto px-4 py-6 flex-grow flex items-center justify-center">
-        
-        <!-- PANTALLA 1: Idioma y Consentimiento Informado -->
-        <section id="screen-1" class="w-full bg-slate-900/90 backdrop-blur-xl border border-slate-700/80 rounded-3xl p-6 md:p-10 shadow-2xl">
-            <div class="text-center max-w-2xl mx-auto mb-8">
-                <h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-3 text-white" data-i18n="s1_title">Descubre tu próximo destino</h1>
-                <p class="text-slate-300 text-sm md:text-base" data-i18n="s1_subtitle">Selecciona tu idioma preferido y acepta los términos para comenzar tu experiencia de viaje.</p>
-            </div>
-
-            <!-- Carrusel de destinos -->
-            <div class="marquee -mx-6 md:-mx-10 mb-8" aria-label="Destinos">
-                <div id="carrusel-track" class="marquee-track"></div>
-            </div>
-
-            <!-- Selector de Idioma -->
-            <div class="mb-8">
-                <label class="block text-sm font-semibold text-slate-300 mb-3 text-center" data-i18n="s1_lang_label">Selecciona el Idioma / Select Language / Choisissez la langue</label>
-                <div class="grid grid-cols-3 gap-3 max-w-md mx-auto">
-                    <button onclick="app.cambiarIdioma('es')" id="lang-es" class="lang-btn bg-blue-600 text-white font-medium py-3 rounded-xl border border-blue-500 transition shadow-lg text-center">Español</button>
-                    <button onclick="app.cambiarIdioma('en')" id="lang-en" class="lang-btn bg-slate-800 text-slate-300 font-medium py-3 rounded-xl border border-slate-700 hover:bg-slate-700 transition text-center">English</button>
-                    <button onclick="app.cambiarIdioma('fr')" id="lang-fr" class="lang-btn bg-slate-800 text-slate-300 font-medium py-3 rounded-xl border border-slate-700 hover:bg-slate-700 transition text-center">Français</button>
-                </div>
-            </div>
-
-            <!-- Consentimiento Informado (Ley 1581 de Colombia) -->
-            <div class="flex flex-col items-center justify-center mb-8">
-                <div class="flex items-start sm:items-center justify-center space-x-3 max-w-xl">
-                    <input type="checkbox" id="check-consent" onclick="app.clickConsentimiento(event)" onchange="app.validarConsentimiento()" class="w-5 h-5 mt-0.5 sm:mt-0 accent-blue-600 rounded cursor-pointer flex-shrink-0">
-                    <p class="text-sm text-slate-300 select-none">
-                        <span data-i18n="s1_accept_pre">He leído y acepto la</span>
-                        <button type="button" onclick="app.abrirPolitica()" class="text-blue-400 hover:text-blue-300 underline underline-offset-2 font-medium text-left" data-i18n="s1_habeas_link">Política de Tratamiento de Datos (Ley 1581 de 2012 - Colombia)</button>
-                    </p>
-                </div>
-                <p id="policy-hint" class="text-xs text-slate-500 mt-3 text-center" data-i18n="s1_policy_hint">Para continuar debes abrir la política y leerla hasta el final.</p>
-            </div>
-
-            <!-- Botón Continuar -->
-            <div class="text-center">
-                <button id="btn-start" disabled onclick="app.irPasoClima()" class="bg-blue-600/50 cursor-not-allowed text-white font-semibold px-8 py-4 rounded-2xl shadow-xl transition w-full md:w-auto text-base">
-                    <span data-i18n="s1_btn">Iniciar Experiencia</span> <i class="fa-solid fa-arrow-right ml-2"></i>
-                </button>
-            </div>
-        </section>
-
-        <!-- PANTALLA 2: Selección de Clima -->
-        <section id="screen-2" class="hidden w-full bg-slate-900/90 backdrop-blur-xl border border-slate-700/80 rounded-3xl p-6 md:p-10 shadow-2xl text-center">
-            <h2 class="text-2xl md:text-3xl font-bold mb-3 text-white" data-i18n="s2_title">¿Qué clima prefieres para tu viaje?</h2>
-            <p class="text-slate-300 mb-8 text-sm md:text-base" data-i18n="s2_subtitle">Elige el ambiente térmico ideal para tus próximas vacaciones.</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-                <button onclick="app.seleccionarClima('calido')" class="group bg-gradient-to-b from-amber-500/20 to-orange-600/20 hover:from-amber-500/30 hover:to-orange-600/30 border border-amber-500/30 hover:border-amber-400 p-6 rounded-3xl transition shadow-xl flex flex-col items-center justify-center space-y-4">
-                    <div class="w-16 h-16 rounded-2xl bg-amber-500/20 flex items-center justify-center text-amber-400 text-3xl group-hover:scale-110 transition"><i class="fa-solid fa-sun"></i></div>
-                    <span class="text-xl font-bold text-white" data-i18n="s2_warm">Cálido</span>
-                </button>
-                <button onclick="app.seleccionarClima('templado')" class="group bg-gradient-to-b from-emerald-500/20 to-teal-600/20 hover:from-emerald-500/30 hover:to-teal-600/30 border border-emerald-500/30 hover:border-emerald-400 p-6 rounded-3xl transition shadow-xl flex flex-col items-center justify-center space-y-4">
-                    <div class="w-16 h-16 rounded-2xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-3xl group-hover:scale-110 transition"><i class="fa-solid fa-cloud-sun"></i></div>
-                    <span class="text-xl font-bold text-white" data-i18n="s2_temperate">Templado</span>
-                </button>
-                <button onclick="app.seleccionarClima('frio')" class="group bg-gradient-to-b from-cyan-500/20 to-blue-600/20 hover:from-cyan-500/30 hover:to-blue-600/30 border border-cyan-500/30 hover:border-cyan-400 p-6 rounded-3xl transition shadow-xl flex flex-col items-center justify-center space-y-4">
-                    <div class="w-16 h-16 rounded-2xl bg-cyan-500/20 flex items-center justify-center text-cyan-400 text-3xl group-hover:scale-110 transition"><i class="fa-solid fa-snowflake"></i></div>
-                    <span class="text-xl font-bold text-white" data-i18n="s2_cold">Frío</span>
-                </button>
-            </div>
-        </section>
-
-        <!-- PANTALLA 2.5: Sub-opción para clima cálido (Playa o Ciudad) -->
-        <section id="screen-sub-calido" class="hidden w-full bg-slate-900/90 backdrop-blur-xl border border-slate-700/80 rounded-3xl p-6 md:p-10 shadow-2xl text-center">
-            <h2 class="text-2xl md:text-3xl font-bold mb-3 text-white" data-i18n="s_warm_sub_title">¿Qué ambiente prefieres para tu clima cálido?</h2>
-            <p class="text-slate-300 mb-8 text-sm md:text-base" data-i18n="s_warm_sub_subtitle">Selecciona entre la brisa del mar o el dinamismo urbano.</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-xl mx-auto">
-                <button onclick="app.seleccionarAmbienteCalido('playa')" class="group bg-gradient-to-b from-sky-500/20 to-blue-600/20 hover:from-sky-500/30 hover:to-blue-600/30 border border-sky-500/30 hover:border-sky-400 p-6 rounded-3xl transition shadow-xl flex flex-col items-center justify-center space-y-4">
-                    <div class="w-16 h-16 rounded-2xl bg-sky-500/20 flex items-center justify-center text-sky-400 text-3xl group-hover:scale-110 transition"><i class="fa-solid fa-umbrella-beach"></i></div>
-                    <span class="text-xl font-bold text-white" data-i18n="s_warm_beach">Playa</span>
-                </button>
-                <button onclick="app.seleccionarAmbienteCalido('ciudad')" class="group bg-gradient-to-b from-indigo-500/20 to-purple-600/20 hover:from-indigo-500/30 hover:to-purple-600/30 border border-indigo-500/30 hover:border-indigo-400 p-6 rounded-3xl transition shadow-xl flex flex-col items-center justify-center space-y-4">
-                    <div class="w-16 h-16 rounded-2xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 text-3xl group-hover:scale-110 transition"><p class="fa-solid fa-city text-3xl"></p></div>
-                    <span class="text-xl font-bold text-white" data-i18n="s_warm_city">Ciudad</span>
-                </button>
-            </div>
-        </section>
-
-        <!-- PANTALLA 3: Selección de Continente -->
-        <section id="screen-3" class="hidden w-full bg-slate-900/90 backdrop-blur-xl border border-slate-700/80 rounded-3xl p-6 md:p-10 shadow-2xl text-center">
-            <h2 class="text-2xl md:text-3xl font-bold mb-3 text-white" data-i18n="s3_title">Selecciona el Continente</h2>
-            <p class="text-slate-300 mb-8 text-sm md:text-base" data-i18n="s3_subtitle">Explora los mejores destinos internacionales de acuerdo a tu elección.</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-                <button onclick="app.seleccionarContinente('america')" class="bg-slate-800/80 hover:bg-slate-700/90 border border-slate-700 hover:border-blue-500 p-6 rounded-3xl transition shadow-xl flex flex-col items-center justify-center space-y-4">
-                    <div class="w-14 h-14 rounded-2xl bg-blue-500/20 flex items-center justify-center text-blue-400 text-2xl"><i class="fa-solid fa-globe-americas"></i></div>
-                    <span class="text-lg font-bold text-white" data-i18n="cont_america">América</span>
-                </button>
-                <button onclick="app.seleccionarContinente('europa')" class="bg-slate-800/80 hover:bg-slate-700/90 border border-slate-700 hover:border-blue-500 p-6 rounded-3xl transition shadow-xl flex flex-col items-center justify-center space-y-4">
-                    <div class="w-14 h-14 rounded-2xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 text-2xl"><i class="fa-solid fa-globe-europe"></i></div>
-                    <span class="text-lg font-bold text-white" data-i18n="cont_europe">Europa</span>
-                </button>
-                <button onclick="app.seleccionarContinente('asia')" class="bg-slate-800/80 hover:bg-slate-700/90 border border-slate-700 hover:border-blue-500 p-6 rounded-3xl transition shadow-xl flex flex-col items-center justify-center space-y-4">
-                    <div class="w-14 h-14 rounded-2xl bg-purple-500/20 flex items-center justify-center text-purple-400 text-2xl"><i class="fa-solid fa-globe-asia"></i></div>
-                    <span class="text-lg font-bold text-white" data-i18n="cont_asia">Asia y Oceanía</span>
-                </button>
-            </div>
-        </section>
-
-        <!-- PANTALLA 4: Selección de Destino Específico -->
-        <section id="screen-4" class="hidden w-full bg-slate-900/90 backdrop-blur-xl border border-slate-700/80 rounded-3xl p-6 md:p-10 shadow-2xl">
-            <div class="text-center mb-8">
-                <h2 class="text-2xl md:text-3xl font-bold mb-3 text-white" data-i18n="s4_title">Elige tu Destino Ideal</h2>
-                <p class="text-slate-300 text-sm md:text-base" data-i18n="s4_subtitle">Selecciona el lugar que deseas visitar en este continente.</p>
-            </div>
-            <div id="destinos-container" class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                <!-- Se inyecta dinámicamente desde JS -->
-            </div>
-        </section>
-
-        <!-- PANTALLA 5: Tipo de Plan -->
-        <section id="screen-5" class="hidden w-full bg-slate-900/90 backdrop-blur-xl border border-slate-700/80 rounded-3xl p-6 md:p-10 shadow-2xl text-center">
-            <h2 class="text-2xl md:text-3xl font-bold mb-3 text-white" data-i18n="s5_title">¿Qué tipo de plan prefieres?</h2>
-            <p class="text-slate-300 mb-8 text-sm md:text-base" data-i18n="s5_subtitle">Personaliza tu itinerario según tus actividades favoritas.</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto mb-6">
-                <button onclick="app.seleccionarPlan('naturaleza')" class="bg-slate-800/80 hover:bg-slate-700 border border-slate-700 hover:border-emerald-500 p-5 rounded-2xl transition flex items-center space-x-4 text-left">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400 text-xl flex-shrink-0"><i class="fa-solid fa-tree"></i></div>
-                    <div>
-                        <h4 class="font-bold text-white" data-i18n="plan_nature">Planes con Naturaleza</h4>
-                        <p class="text-xs text-slate-400" data-i18n="plan_nature_desc">Parques naturales, ecoturismo y paisajes.</p>
-                    </div>
-                </button>
-                <button onclick="app.seleccionarPlan('fiesta')" class="bg-slate-800/80 hover:bg-slate-700 border border-slate-700 hover:border-purple-500 p-5 rounded-2xl transition flex items-center space-x-4 text-left">
-                    <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-400 text-xl flex-shrink-0"><i class="fa-solid fa-champagne-glasses"></i></div>
-                    <div>
-                        <h4 class="font-bold text-white" data-i18n="plan_party">Plan Fiesta Nocturna</h4>
-                        <p class="text-xs text-slate-400" data-i18n="plan_party_desc">Bares, discotecas y vida nocturna vibrante.</p>
-                    </div>
-                </button>
-                <button onclick="app.seleccionarPlan('recorrido')" class="bg-slate-800/80 hover:bg-slate-700 border border-slate-700 hover:border-blue-500 p-5 rounded-2xl transition flex items-center space-x-4 text-left">
-                    <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 text-xl flex-shrink-0"><i class="fa-solid fa-landmark"></i></div>
-                    <div>
-                        <h4 class="font-bold text-white" data-i18n="plan_tour">Plan Recorrido Turístico</h4>
-                        <p class="text-xs text-slate-400" data-i18n="plan_tour_desc">Monumentos, museos y cultura histórica.</p>
-                    </div>
-                </button>
-                <button onclick="app.seleccionarPlan('todas')" class="bg-slate-800/80 hover:bg-slate-700 border border-slate-700 hover:border-amber-500 p-5 rounded-2xl transition flex items-center space-x-4 text-left">
-                    <div class="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-400 text-xl flex-shrink-0"><i class="fa-solid fa-star"></i></div>
-                    <div>
-                        <h4 class="font-bold text-white" data-i18n="plan_all">Todas las anteriores</h4>
-                        <p class="text-xs text-slate-400" data-i18n="plan_all_desc">Una experiencia completa sin perderte nada.</p>
-                    </div>
-                </button>
-            </div>
-        </section>
-
-        <!-- PANTALLA 6: Resultado Final y Recomendaciones -->
-        <section id="screen-6" class="hidden w-full bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-3xl p-6 md:p-10 shadow-2xl">
-            <div id="pdf-content" class="space-y-8">
-                <!-- Encabezado de Resultados -->
-                <div class="text-center border-b border-slate-800 pb-6">
-                    <span id="res-clima-badge" class="bg-blue-500/20 text-blue-400 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider border border-blue-500/30 inline-block mb-3">Clima Cálido</span>
-                    <h2 id="res-destino-nombre" class="text-3xl md:text-4xl font-extrabold text-white mb-2">Cancún, México</h2>
-                    <p id="res-epoca" class="text-slate-300 text-sm md:text-base"><i class="fa-solid fa-calendar-days text-blue-400 mr-2"></i> <span class="font-medium">Época ideal:</span> Diciembre a Abril (Clima óptimo)</p>
-                </div>
-
-                <!-- 5 Lugares Turísticos -->
-                <div>
-                    <h3 class="text-xl font-bold text-white mb-4 flex items-center"><i class="fa-solid fa-map-location-dot text-blue-400 mr-3"></i> <span data-i18n="res_places_title">5 Lugares Turísticos Recomendados</span></h3>
-                    <div id="res-lugares-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <!-- Inyectado por JS -->
-                    </div>
-                </div>
-
-                <!-- 5 Comidas Típicas -->
-                <div>
-                    <h3 class="text-xl font-bold text-white mb-4 flex items-center"><i class="fa-solid fa-utensils text-orange-400 mr-3"></i> <span data-i18n="res_food_title">5 Comidas Típicas a Probar</span></h3>
-                    <div id="res-comida-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <!-- Inyectado por JS -->
-                    </div>
-                </div>
-
-                <!-- 5 Lugares de Hospedaje -->
-                <div>
-                    <h3 class="text-xl font-bold text-white mb-4 flex items-center"><i class="fa-solid fa-hotel text-emerald-400 mr-3"></i> <span data-i18n="res_hotel_title">5 Opciones de Hospedaje</span></h3>
-                    <div id="res-hotel-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <!-- Inyectado por JS -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Botón de Descarga PDF -->
-            <div class="mt-10 pt-6 border-t border-slate-800 text-center flex flex-col sm:flex-row justify-center gap-4">
-                <button onclick="app.descargarPDF()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold px-8 py-4 rounded-2xl shadow-xl transition flex items-center justify-center space-x-3 text-base">
-                    <i class="fa-solid fa-file-pdf text-xl"></i> <span data-i18n="btn_download_pdf">Descargar Itinerario en PDF</span>
-                </button>
-                <button onclick="app.irMenuPrincipal()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold px-6 py-4 rounded-2xl transition border border-slate-700">
-                    <i class="fa-solid fa-rotate-right mr-2"></i> <span data-i18n="btn_restart">Nueva Búsqueda</span>
-                </button>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="w-full text-center py-6 text-xs text-slate-500">
-        <p>Tu Guía &copy; 2026 - Todos los derechos reservados. Desarrollado con estándares profesionales.</p>
-    </footer>
-
-    <!-- Ventana flotante: Política de Tratamiento de Datos -->
-    <div id="modal-politica" style="display:none" class="fixed inset-0 z-50 items-center justify-center p-3 sm:p-6 bg-slate-950/80 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="pol-titulo">
-        <div class="w-full max-w-2xl max-h-full h-[88vh] bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl flex flex-col overflow-hidden">
-            <!-- Cabecera -->
-            <div class="flex items-start justify-between gap-4 px-5 sm:px-7 pt-5 pb-3 border-b border-slate-800">
-                <div>
-                    <h3 id="pol-titulo" class="text-lg sm:text-xl font-bold text-white"></h3>
-                    <p id="pol-subtitulo" class="text-xs text-slate-400 mt-1"></p>
-                </div>
-                <button type="button" onclick="app.cerrarPolitica()" class="text-slate-400 hover:text-white w-9 h-9 rounded-xl hover:bg-slate-800 transition flex-shrink-0" aria-label="Cerrar">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-            <!-- Barra de progreso de lectura -->
-            <div class="h-1 bg-slate-800"><div id="pol-progreso" class="h-full bg-blue-500 transition-all duration-150" style="width:0%"></div></div>
-            <!-- Contenido con scroll -->
-            <div id="pol-body" class="pol-body flex-1 overflow-y-auto px-5 sm:px-7 py-5 text-sm text-slate-300" onscroll="app.onScrollPolitica()" tabindex="0"></div>
-            <!-- Pie -->
-            <div class="px-5 sm:px-7 py-4 border-t border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <p id="pol-estado" class="text-xs text-slate-400"></p>
-                <div class="flex gap-3 sm:flex-shrink-0">
-                    <button type="button" onclick="app.cerrarPolitica()" id="pol-btn-cerrar" class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold px-5 py-2.5 rounded-xl border border-slate-700 transition text-sm"></button>
-                    <button type="button" id="pol-btn-aceptar" disabled onclick="app.aceptarPolitica()" class="flex-1 sm:flex-none bg-blue-600/40 cursor-not-allowed text-white/70 font-semibold px-5 py-2.5 rounded-xl transition text-sm"></button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Script principal de lógica -->
-    <script src="politica.js"></script>
-    <script src="app.js"></script>
-    <script src="itinerarios-mejoras.js"></script>
-</body>
-</html>
+<body class="min-h-screen bg-slate-950 text-slate-100">
+<main class="mx-auto max-w-4xl p-5 md:p-8">
+<header class="mb-7 flex flex-wrap items-center justify-between gap-4">
+  <div><p class="text-sm uppercase tracking-widest text-emerald-400">Tu Guía</p><h1 class="mt-1 text-3xl font-bold">Cargar imágenes</h1><p class="mt-2 text-slate-400">Selecciona exactamente qué elemento vas a actualizar antes de subir la imagen.</p></div>
+  <div class="flex gap-2"><a href="../" class="rounded-xl border border-slate-700 px-4 py-2 hover:bg-slate-800">Ver como cliente ↗</a><button id="logout" class="hidden rounded-xl border border-slate-700 px-4 py-2 hover:bg-slate-800">Salir del modo administrador</button></div>
+</header>
+<section id="login" class="max-w-lg rounded-2xl border border-slate-800 bg-slate-900 p-6">
+  <h2 class="text-xl font-semibold">Acceso administrador</h2><label class="mt-4 block text-sm" for="password">Contraseña</label><input id="password" type="password" autocomplete="current-password" class="mt-2 w-full rounded-xl border border-slate-700 bg-slate-950 p-3">
+  <button id="enter" class="mt-4 rounded-xl bg-emerald-600 px-5 py-3 font-semibold">Continuar</button><p id="loginMessage" class="mt-3 text-sm text-amber-300">La contraseña se valida al guardar en el servidor.</p>
+</section>
+<section id="panel" class="hidden space-y-5">
+  <div class="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+    <div class="mb-5 flex items-center gap-3"><span class="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-600 font-bold">1</span><div><h2 class="font-semibold">¿En qué destino?</h2><p class="text-sm text-slate-400">Primero elige el destino que estás editando.</p></div></div>
+    <select id="destination" class="w-full rounded-xl border border-slate-700 bg-slate-950 p-3"></select>
+    <div class="mb-5 mt-7 flex items-center gap-3"><span class="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-600 font-bold">2</span><div><h2 class="font-semibold">¿Qué tipo de elemento?</h2><p class="text-sm text-slate-400">Indica si es la foto del destino, un lugar, comida u hospedaje.</p></div></div>
+    <select id="kind" class="w-full rounded-xl border border-slate-700 bg-slate-950 p-3">
+      <option value="destino">Imagen principal del destino</option><option value="lugares">Lugar turístico</option><option value="comida">Comida típica</option><option value="hospedaje">Hospedaje</option>
+    </select>
+    <div class="mb-5 mt-7 flex items-center gap-3"><span class="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-600 font-bold">3</span><div><h2 class="font-semibold">¿Cuál elemento?</h2><p class="text-sm text-slate-400">Selecciona el nombre exacto al que se le asociará la imagen.</p></div></div>
+    <select id="item" class="w-full rounded-xl border border-slate-700 bg-slate-950 p-3"></select>
+    <div id="target" class="mt-3 rounded-xl border border-slate-700 bg-slate-950 p-3 text-sm text-slate-300">Elemento seleccionado: —</div>
+  </div>
+  <div class="rounded-2xl border border-slate-800 bg-slate-900 p-5">
+    <div class="mb-4 flex items-center gap-3"><span class="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-600 font-bold">4</span><div><h2 class="font-semibold">Cargar imagen</h2><p class="text-sm text-slate-400">Elige la imagen que quieres guardar para el elemento seleccionado.</p></div></div>
+    <label for="file" class="block text-sm text-slate-300">Archivo de imagen (PNG, JPG o WebP; máximo 5 MB)</label><input id="file" type="file" accept="image/png,image/jpeg,image/webp" class="mt-2 block w-full rounded-xl border border-slate-700 bg-slate-950 p-3 text-sm">
+    <div id="preview" class="mt-4 hidden"><p class="mb-2 text-sm text-slate-400">Imagen actualmente asociada</p><img id="currentImage" alt="Imagen asociada al elemento" class="max-h-64 max-w-full rounded-xl border border-slate-700 object-contain"></div>
+    <button id="upload" class="mt-5 w-full rounded-xl bg-emerald-600 px-5 py-3 font-semibold hover:bg-emerald-500 disabled:cursor-not-allowed disabled:opacity-50">Cargar imagen para este elemento</button>
+    <p id="status" class="mt-4 text-sm" role="status" aria-live="polite">Completa los pasos 1, 2 y 3; luego selecciona la imagen.</p>
+  </div>
+</section>
+<p class="mt-8 text-xs text-slate-500">Las imágenes se guardan en el repositorio y quedan disponibles cuando GitHub Pages publica el commit.</p>
+</main>
+<script src="../catalogo-admin.js"></script>
+<script>
+const WORKER_URL='https://tu-viaje.jgaravitom.workers.dev/';
+const $=id=>document.getElementById(id);
+let password='', metadata={};
+const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,120);
+const all=[];
+function walk(o){if(Array.isArray(o)){o.forEach(x=>{if(x&&x.id)all.push(x);});return;}if(o&&typeof o==='object')Object.values(o).forEach(walk);}
+walk(window.TU_GUIA_DESTINOS);
+const destinations=[...new Map(all.map(x=>[x.id,x])).values()];
+destinations.forEach(d=>{const opt=document.createElement('option');opt.value=d.id;opt.textContent=d.nombre;$('destination').append(opt);});
+const kindNames={destino:'Imagen principal del destino',lugares:'Lugar turístico',comida:'Comida típica',hospedaje:'Hospedaje'};
+function selectedDestination(){return destinations.find(d=>d.id===$('destination').value);}
+function itemOptions(d,kind){if(!d)return[];if(kind==='destino')return[{label:d.nombre,value:d.img}];return(d[kind]||[]).map(name=>({label:name,value:name}));}
+function currentPath(d,kind,itemValue,plan){const data=metadata[d.id]||{},key=norm(d.id+'-'+kind+'-'+itemValue);return(data.shared&&data.shared[kind]&&data.shared[kind][key])||(data.plans&&data.plans[plan]&&data.plans[plan][kind]&&data.plans[plan][kind][key])||(kind==='destino'?'img/'+d.img:'');}
+function refreshItem(){const d=selectedDestination(),kind=$('kind').value,items=itemOptions(d,kind);$('item').innerHTML='';items.forEach(x=>{const o=document.createElement('option');o.value=x.value;o.textContent=x.label;$('item').append(o);});$('target').textContent='Elemento seleccionado: '+(d?d.nombre:'—')+' → '+kindNames[kind]+' → '+(items[0]?.label||'Sin elementos');refreshPreview();}
+function refreshPreview(){const d=selectedDestination(),kind=$('kind').value,item=$('item').value;const path=d?currentPath(d,kind,item,'todas'):'';if(path){$('currentImage').src='../'+path+'?v='+Date.now();$('preview').classList.remove('hidden');$('currentImage').onerror=()=>{$('preview').classList.add('hidden');};}else{$('preview').classList.add('hidden');}}
+async function post(payload){const r=await fetch(WORKER_URL,{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Password':password},body:JSON.stringify(payload)});const data=await r.json().catch(()=>({}));if(!r.ok)throw new Error(data.details||data.error||'Error del servidor');return data;}
+$('enter').onclick=async()=>{if(!$('password').value){$('loginMessage').textContent='Ingresa la contraseña.';return;}password=$('password').value;try{const r=await fetch('../img/itinerarios.json?v='+Date.now(),{cache:'no-store'});metadata=r.ok?await r.json():{};}catch(_){metadata={};}$('login').classList.add('hidden');$('panel').classList.remove('hidden');$('logout').classList.remove('hidden');refreshItem();};
+$('logout').onclick=()=>{password='';$('password').value='';$('panel').classList.add('hidden');$('logout').classList.add('hidden');$('login').classList.remove('hidden');$('status').textContent='Sesión cerrada.';};
+$('destination').onchange=refreshItem;$('kind').onchange=refreshItem;$('item').onchange=()=>{$('target').textContent='Elemento seleccionado: '+selectedDestination().nombre+' → '+kindNames[$('kind').value]+' → '+$('item').selectedOptions[0].textContent;refreshPreview();};
+$('upload').onclick=async()=>{const d=selectedDestination(),kind=$('kind').value,itemValue=$('item').value,file=$('file').files[0];if(!d||!itemValue){$('status').textContent='Selecciona destino, tipo y elemento.';return;}if(!file){$('status').textContent='Selecciona primero una imagen.';return;}if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>5*1024*1024){$('status').textContent='Usa PNG, JPG o WebP de máximo 5 MB.';return;}const btn=$('upload');btn.disabled=true;btn.textContent='Subiendo imagen…';$('status').textContent='Se guardará en: '+d.nombre+' / '+kindNames[kind]+' / '+$('item').selectedOptions[0].textContent;try{const base64=await new Promise((ok,no)=>{const fr=new FileReader();fr.onload=()=>ok(String(fr.result).split(',')[1]);fr.onerror=()=>no(new Error('No se pudo leer el archivo'));fr.readAsDataURL(file);});const folders={destino:'destinos',lugares:'recomendaciones',comida:'comidas',hospedaje:'hoteles'};const up=await post({filename:file.name,contentBase64:base64,contentType:file.type,folder:folders[kind]});const itemId=norm(d.id+'-'+kind+'-'+itemValue);await post({action:'save-metadata',destinationId:d.id,kind,itemId,imagePath:up.path,planId:'todas'});metadata[d.id]??={};metadata[d.id].shared??={};metadata[d.id].shared[kind]??={};metadata[d.id].shared[kind][itemId]=up.path;$('currentImage').src='../'+up.path+'?v='+Date.now();$('preview').classList.remove('hidden');$('file').value='';$('status').textContent='¡Imagen guardada! Destino: '+d.nombre+' · Tipo: '+kindNames[kind]+' · Elemento: '+$('item').selectedOptions[0].textContent;btn.textContent='Imagen cargada ✓';}catch(e){$('status').textContent=e.message||'No se pudo guardar la imagen.';btn.textContent='Reintentar carga';}finally{btn.disabled=false;}};
+</script>
+</body></html>
